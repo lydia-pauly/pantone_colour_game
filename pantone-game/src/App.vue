@@ -31,9 +31,8 @@
   export default {
     data() {
       return {
-        index : Math.floor(Math.random() * colors['names'].length),
-        value : 0,
-        name : ""
+        names : [],
+        values : []
         }
     },
     methods: {
@@ -44,12 +43,24 @@
       getColorName() {
         this.name = colors['names'][this.index];
         return
+      },
+      setNamesAndValues() {
+        let index = 0;
+        for (let i = 1; i < 5; i++) {
+          index = Math.floor(Math.random() * colors['names'].length);
+          this.names.push(colors['names'][index]);
+          this.values.push(colors['values'][index]);
+        }
+        console.log(this.names);
+        console.log(this.values);
+        return
       }
     },
 
     mounted() {
       this.getColorValue();
       this.getColorName();
+      this.setNamesAndValues();
     }
     }
 </script>
