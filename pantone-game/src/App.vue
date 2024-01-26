@@ -1,10 +1,26 @@
 <template>
   <div class="game-body">
+    <p>Total correct: {{ totalCorrect }}</p>
+    <p>Highest streak: {{ largestStreak }}</p>
+    <p>Current streak: {{ currentStreak }}</p>
     <div class="game-blocks">
-      <div class="colour-block" :class="{'correct-guess': correctnessArray[0]}" id="colour-block-0" :style="{ backgroundColor : values[0] }" @click ="checkAnswer($event)"></div>
-      <div class="colour-block" :class="{'correct-guess': correctnessArray[1]}" id="colour-block-1" :style="{ backgroundColor : values[1] }" @click ="checkAnswer($event)"></div>
-      <div class="colour-block" :class="{'correct-guess': correctnessArray[2]}" id="colour-block-2" :style="{ backgroundColor : values[2] }" @click ="checkAnswer($event)"></div>
-      <div class="colour-block" :class="{'correct-guess': correctnessArray[3]}" id="colour-block-3" :style="{ backgroundColor : values[3] }" @click ="checkAnswer($event)"></div>
+      <div class="colour-and-name">
+        <div class="colour-block" :class="{'correct-guess': correctnessArray[0]}" id="colour-block-0" :style="{ backgroundColor : values[0] }" @click ="checkAnswer($event)"></div>
+        <p class="colour-name" id="cn-0">{{ colourName[0] }}</p>
+      </div>
+      <div class="colour-and-name">
+        <div class="colour-block" :class="{'correct-guess': correctnessArray[1]}" id="colour-block-1" :style="{ backgroundColor : values[1] }" @click ="checkAnswer($event)"></div>
+        <p class="colour-name" id="cn-1">{{ colourName[1] }}</p>
+      </div>
+      <div class="colour-and-name">
+        <div class="colour-block" :class="{'correct-guess': correctnessArray[2]}" id="colour-block-2" :style="{ backgroundColor : values[2] }" @click ="checkAnswer($event)"></div>
+        <p class="colour-name" id="cn-2">{{ colourName[2] }}</p>
+      </div>
+      <div class="colour-and-name">
+        <div class="colour-block" :class="{'correct-guess': correctnessArray[3]}" id="colour-block-3" :style="{ backgroundColor : values[3] }" @click ="checkAnswer($event)"></div>
+        <p class="colour-name" id="cn-3">{{ colourName[3] }}</p>
+      </div>
+
     </div>
     <p id="guessing-name"> {{ guessingName }}</p>
     <p id="verdict"> {{ verdict }} </p>
@@ -12,7 +28,7 @@
 </template>
 
 <script>
-  import colors from "./assets/pantone-colors.json";
+import colors from "./assets/pantone-colors.json";
 
   export default {
     data() {
@@ -23,6 +39,11 @@
         guessingName : "",
         verdict : "",
         correctnessArray : [false, false, false, false],
+        colourName : ["", "", "", ""],
+        totalCorrect: 0,
+        largestStreak: 0,
+        currentStreak: 0,
+        streakUnbroken : true
         }
     },
     methods: {
@@ -43,18 +64,24 @@
         let id = e["srcElement"]["id"];
         if ((this.choice).toString() === id.charAt(id.length - 1)) {
           this.guessingName = "Correct!";
+          this.totalCorrect++;
+          this.currentStreak++;
         } else {
-          let actualChoice = this.names[(id.charAt(id.length -1))];
-          actualChoice = actualChoice.replace("-", " ");
-          actualChoice = actualChoice.charAt(0).toUpperCase() + actualChoice.slice(1);
-          this.guessingName = "That was '" + actualChoice + "'";
+          // let actualChoice = this.names[(id.charAt(id.length -1))];
+          // actualChoice = actualChoice.replace("-", " ");
+          // actualChoice = actualChoice.charAt(0).toUpperCase() + actualChoice.slice(1);
+          this.guessingName = "Incorrect!";
+          this.currentStreak = 0;
         }
         for (let i = 0; i < 4; i++) {
-          if (i === this.choice) {
-            this.correctnessArray[i] = true;
+          // if (i === this.choice) {
+          //   this.correctnessArray[i] = true;
+          // }
+          if (i.toString() === id.charAt(id.length - 1)) {
+            this.colourName[i] = this.names[i];
           }
         }
-        setTimeout("location.reload()", 1500);
+        setTimeout("location.reload()", 2000);
         return
       }
     },
@@ -81,6 +108,17 @@
     width: 100%;
   }
 
+  .colour-and-name {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .colour-name {
+    text-align: center;
+    font-family: 'Courier New', Courier, monospace;
+  }
+
   #guessing-name {
     display: flex;
     justify-content: center;
@@ -96,13 +134,8 @@
     flex-direction: column;
   }
 
-  .incorrect-guess {
-    border-color: red;
-    border-width: 10px;
-  }
-
   .correct-guess {
-    border-color: green;
+    border-color: #6ed475;
     border-width: 10px;
     border-style: solid;
   }
