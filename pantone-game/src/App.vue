@@ -1,13 +1,13 @@
 <template>
   <div class="game-body">
     <div class="game-blocks">
-      <div class="colour-block" id="colour-block-0" :style="{ backgroundColor : values[0] }" @click ="checkAnswer($event)"></div>
-      <div class="colour-block" id="colour-block-1" :style="{ backgroundColor : values[1] }" @click ="checkAnswer($event)"></div>
-      <div class="colour-block" id="colour-block-2" :style="{ backgroundColor : values[2] }" @click ="checkAnswer($event)"></div>
-      <div class="colour-block" id="colour-block-3" :style="{ backgroundColor : values[3] }" @click ="checkAnswer($event)"></div>
+      <div class="colour-block" :class="{'correct-guess': correctnessArray[0]}" id="colour-block-0" :style="{ backgroundColor : values[0] }" @click ="checkAnswer($event)"></div>
+      <div class="colour-block" :class="{'correct-guess': correctnessArray[1]}" id="colour-block-1" :style="{ backgroundColor : values[1] }" @click ="checkAnswer($event)"></div>
+      <div class="colour-block" :class="{'correct-guess': correctnessArray[2]}" id="colour-block-2" :style="{ backgroundColor : values[2] }" @click ="checkAnswer($event)"></div>
+      <div class="colour-block" :class="{'correct-guess': correctnessArray[3]}" id="colour-block-3" :style="{ backgroundColor : values[3] }" @click ="checkAnswer($event)"></div>
     </div>
     <p id="guessing-name"> {{ guessingName }}</p>
-    <p id="verdict">{{ verdict }}</p>
+    <p id="verdict"> {{ verdict }} </p>
   </div>
 </template>
 
@@ -21,7 +21,8 @@
         values : [],
         choice : 0,
         guessingName : "",
-        verdict : ""
+        verdict : "",
+        correctnessArray : [false, false, false, false],
         }
     },
     methods: {
@@ -41,12 +42,17 @@
       checkAnswer(e) {
         let id = e["srcElement"]["id"];
         if ((this.choice).toString() === id.charAt(id.length - 1)) {
-          this.verdict = "Correct!";
+          this.guessingName = "Correct!";
         } else {
           let actualChoice = this.names[(id.charAt(id.length -1))];
           actualChoice = actualChoice.replace("-", " ");
           actualChoice = actualChoice.charAt(0).toUpperCase() + actualChoice.slice(1);
-          this.verdict = "Wrong! That was " + actualChoice;
+          this.guessingName = "That was '" + actualChoice + "'";
+        }
+        for (let i = 0; i < 4; i++) {
+          if (i === this.choice) {
+            this.correctnessArray[i] = true;
+          }
         }
         setTimeout("location.reload()", 1500);
         return
@@ -88,5 +94,16 @@
   .game-body {
     display: flex;
     flex-direction: column;
+  }
+
+  .incorrect-guess {
+    border-color: red;
+    border-width: 10px;
+  }
+
+  .correct-guess {
+    border-color: green;
+    border-width: 10px;
+    border-style: solid;
   }
 </style>
