@@ -1,27 +1,75 @@
 <template>
   <div class="game-body">
-    <p>Total correct: {{ totalCorrect }}</p>
-    <p>Highest streak: {{ largestStreak }}</p>
-    <p>Current streak: {{ currentStreak }}</p>
     <div class="game-blocks">
       <div class="colour-and-name">
-        <div class="colour-block" :class="{'correct-guess': correctnessArray[0]}" id="colour-block-0" :style="{ backgroundColor : values[0] }" @click ="checkAnswer($event)"></div>
-        <p class="colour-name" id="cn-0">{{ colourName[0] }}</p>
-      </div>
-      <div class="colour-and-name">
-        <div class="colour-block" :class="{'correct-guess': correctnessArray[1]}" id="colour-block-1" :style="{ backgroundColor : values[1] }" @click ="checkAnswer($event)"></div>
-        <p class="colour-name" id="cn-1">{{ colourName[1] }}</p>
-      </div>
-      <div class="colour-and-name">
-        <div class="colour-block" :class="{'correct-guess': correctnessArray[2]}" id="colour-block-2" :style="{ backgroundColor : values[2] }" @click ="checkAnswer($event)"></div>
-        <p class="colour-name" id="cn-2">{{ colourName[2] }}</p>
-      </div>
-      <div class="colour-and-name">
-        <div class="colour-block" :class="{'correct-guess': correctnessArray[3]}" id="colour-block-3" :style="{ backgroundColor : values[3] }" @click ="checkAnswer($event)"></div>
-        <p class="colour-name" id="cn-3">{{ colourName[3] }}</p>
-      </div>
+        <div class="correct-block" :class = "{ hidden: !correctnessArray[0]}">🟩</div>
+        <div
+        class="colour-block"
+        id="colour-block-0"
+        :style="{ backgroundColor : values[0]}"
+        @click ="checkAnswer($event)">
+        </div>
 
+        <p
+        class="colour-name"
+        id="cn-0"
+        :class = "{ hidden: !showNames[0]}">
+        {{ names[0] }}
+        </p>
+
+      </div>
+      <div class="colour-and-name">
+        <div class="correct-block" :class = "{ hidden: !correctnessArray[1]}">🟩</div>
+        <div
+        class="colour-block"
+        id="colour-block-1"
+        :style="{ backgroundColor : values[1] }"
+        @click ="checkAnswer($event)">
+        </div>
+
+        <p class="colour-name"
+        id="cn-1"
+        :class = "{ hidden: !showNames[1]}">
+        {{ names[1] }}
+        </p>
+
+      </div>
+      <div class="colour-and-name">
+        <div class="correct-block" :class = "{ hidden: !correctnessArray[2]}">🟩</div>
+        <div
+        class="colour-block"
+        id="colour-block-2"
+        :style="{ backgroundColor : values[2] }"
+        @click ="checkAnswer($event)">
+        </div>
+
+        <p class="colour-name"
+        id="cn-2"
+        :class = "{ hidden: !showNames[2]}">
+        {{ names[2] }}
+        </p>
+
+      </div>
+      <div class="colour-and-name">
+        <div class="correct-block" :class = "{ hidden: !correctnessArray[3]}">🟩</div>
+        <div class="colour-block"
+        id="colour-block-3"
+        :style="{ backgroundColor : values[3]}"
+        @click ="checkAnswer($event)">
+        </div>
+
+        <p class="colour-name"
+        id="cn-3"
+        :class = "{ hidden: !showNames[3]}">
+        {{ names[3] }}
+        </p>
+
+      </div>
     </div>
+    <div class="progress-bar">
+        <div class="progress-bar__value" :style="{width : progressWidth+'px'}"></div>
+    </div>
+    <p id="current-streak"> {{ currentStreak }} / 15 </p>
     <p id="guessing-name"> {{ guessingName }}</p>
     <p id="verdict"> {{ verdict }} </p>
   </div>
@@ -40,10 +88,14 @@ import colors from "./assets/pantone-colors.json";
         verdict : "",
         correctnessArray : [false, false, false, false],
         colourName : ["", "", "", ""],
+        showNames : [false, false, false, false],
         totalCorrect: 0,
         largestStreak: 0,
         currentStreak: 0,
-        streakUnbroken : true
+        streakUnbroken : true,
+        progressWidth : 0,
+        goodEmojis : ["😀", "😊", "🙂", "😸", "🐮"],
+        badEmojis : ["😠", "😔", "😡", "😟", "😥"]
         }
     },
     methods: {
@@ -62,32 +114,69 @@ import colors from "./assets/pantone-colors.json";
 
       checkAnswer(e) {
         let id = e["srcElement"]["id"];
+
         if ((this.choice).toString() === id.charAt(id.length - 1)) {
-          this.guessingName = "Correct!";
+          this.guessingName = this.goodEmojis[Math.floor(Math.random() * 5)];
           this.totalCorrect++;
+          localStorage.setItem("totalCorrect", this.totalCorrect);
           this.currentStreak++;
+          localStorage.setItem("currentStreak", this.currentStreak);
+          this.progressWidth = (this.currentStreak / 10) * 500;
+          localStorage.setItem("progressWidth", this.progressWidth);
+          if (this.currentStreak > this.largestStreak) {
+            this.largestStreak = this.currentStreak;
+            localStorage.setItem("largestStreak", this.currentStreak);
+          }
         } else {
-          // let actualChoice = this.names[(id.charAt(id.length -1))];
-          // actualChoice = actualChoice.replace("-", " ");
-          // actualChoice = actualChoice.charAt(0).toUpperCase() + actualChoice.slice(1);
-          this.guessingName = "Incorrect!";
+          this.guessingName = this.badEmojis[Math.floor(Math.random() * 5)];
           this.currentStreak = 0;
+          localStorage.setItem("currentStreak", 0);
+          this.progressWidth = 0;
+          localStorage.setItem("progressWidth", 0);
         }
         for (let i = 0; i < 4; i++) {
-          // if (i === this.choice) {
-          //   this.correctnessArray[i] = true;
-          // }
           if (i.toString() === id.charAt(id.length - 1)) {
-            this.colourName[i] = this.names[i];
+            this.showNames[i] = true;
           }
         }
+        this.correctnessArray[this.choice] = true;
         setTimeout("location.reload()", 2000);
         return
+      },
+
+      setLocalStorage() {
+        if (localStorage.getItem("totalCorrect")) {
+          this.totalCorrect = localStorage.getItem("totalCorrect");
+        } else {
+          this.totalCorrect = 0;
+          localStorage.setItem("totalCorrect", 0);
+        }
+        if (localStorage.getItem("largestStreak")) {
+          this.largestStreak = localStorage.getItem("largestStreak");
+        } else {
+          this.largestStreak = 0;
+          localStorage.setItem("largestStreak", 0);
+        }
+
+        if (localStorage.getItem("currentStreak")) {
+          this.currentStreak = localStorage.getItem("currentStreak");
+        } else {
+          this.currentStreak = 0;
+          localStorage.setItem("currentStreak", 0);
+        }
+
+        if (localStorage.getItem("progressWidth")) {
+          this.progressWidth = localStorage.getItem("progressWidth");
+        } else {
+          this.progressWidth = 0;
+          localStorage.setItem("progressWidth", 0);
+        }
       }
     },
 
     mounted() {
       this.setNamesAndValues();
+      this.setLocalStorage();
     }
     }
 </script>
@@ -119,6 +208,18 @@ import colors from "./assets/pantone-colors.json";
     font-family: 'Courier New', Courier, monospace;
   }
 
+  .correct-block {
+    text-align: center;
+    font-size: 40px;
+  }
+
+  #current-streak {
+    text-align: center;
+    font-size: 20px;
+    font-family: 'Courier New', Courier, monospace;
+    margin-top: 20px;
+  }
+
   #guessing-name {
     display: flex;
     justify-content: center;
@@ -129,14 +230,34 @@ import colors from "./assets/pantone-colors.json";
 
   }
 
+  .hidden {
+    visibility: hidden;
+  }
+
   .game-body {
     display: flex;
     flex-direction: column;
+    justify-content: center;
   }
 
   .correct-guess {
     border-color: #6ed475;
     border-width: 10px;
     border-style: solid;
+  }
+
+  .progress-bar {
+    width: 100%;
+    height: 3em;
+    margin-top: 40px;
+    border-radius: 10em;
+    background-color: black;
+    justify-content: center;
+  }
+
+  .progress-bar__value {
+    height: 3em;
+    border-radius: 10em;
+    background-color: #A5CA77;
   }
 </style>
