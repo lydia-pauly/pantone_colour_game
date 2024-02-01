@@ -7,7 +7,7 @@
         class="colour-block"
         id="colour-block-0"
         :style="{ backgroundColor : values[0]}"
-        @click ="checkAnswer($event)">
+        @click.once ="enableClick && checkAnswer($event)">
         </div>
 
         <p
@@ -24,7 +24,7 @@
         class="colour-block"
         id="colour-block-1"
         :style="{ backgroundColor : values[1] }"
-        @click ="checkAnswer($event)">
+        @click.once ="enableClick && checkAnswer($event)">
         </div>
 
         <p class="colour-name"
@@ -40,7 +40,7 @@
         class="colour-block"
         id="colour-block-2"
         :style="{ backgroundColor : values[2] }"
-        @click ="checkAnswer($event)">
+        @click.once ="enableClick && checkAnswer($event)">
         </div>
 
         <p class="colour-name"
@@ -55,7 +55,7 @@
         <div class="colour-block"
         id="colour-block-3"
         :style="{ backgroundColor : values[3]}"
-        @click ="checkAnswer($event)">
+        @click.once ="enableClick && checkAnswer($event)">
         </div>
 
         <p class="colour-name"
@@ -95,7 +95,8 @@ import colors from "./assets/pantone-colors.json";
         streakUnbroken : true,
         progressWidth : 0,
         goodEmojis : ["😀", "😊", "🙂", "😸", "🐮"],
-        badEmojis : ["😠", "😔", "😡", "😟", "😥"]
+        badEmojis : ["😠", "😔", "😡", "😟", "😥"],
+        enableClick: true
         }
     },
     methods: {
@@ -114,6 +115,7 @@ import colors from "./assets/pantone-colors.json";
 
       checkAnswer(e) {
         let id = e["srcElement"]["id"];
+        this.enableClick = false;
 
         if ((this.choice).toString() === id.charAt(id.length - 1)) {
           this.guessingName = this.goodEmojis[Math.floor(Math.random() * 5)];
