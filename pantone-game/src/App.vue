@@ -72,7 +72,7 @@
       </div>
     </div>
     <div class="progress-bar">
-        <div class="progress-bar__value" :style="{width : progressWidth+'px'}"></div>
+        <div class="progress-bar__value" :style="{width : progressWidth+'%'}"></div>
     </div>
     <p id="current-streak"> {{ currentStreak }} / 10 </p>
     <p id="guessing-name"> {{ guessingName }}</p>
@@ -129,21 +129,18 @@ import colors from "./assets/pantone-colors.json";
           localStorage.setItem("totalCorrect", this.totalCorrect);
           this.currentStreak++;
           localStorage.setItem("currentStreak", this.currentStreak);
-          this.progressWidth = (this.currentStreak / 10) * 500;
+          this.progressWidth = (this.currentStreak / 10) * 100;
           localStorage.setItem("progressWidth", this.progressWidth);
           if (this.currentStreak > this.largestStreak) {
             this.largestStreak = this.currentStreak;
             localStorage.setItem("largestStreak", this.currentStreak);
-          }
-          if (this.currentStreak == 10) {
-            this.showConfetti = true;
           }
         } else {
           this.guessingName = this.badEmojis[Math.floor(Math.random() * 5)];
           if (this.currentStreak > 0) {
             this.currentStreak = Math.floor(this.currentStreak / 2);
             localStorage.setItem("currentStreak", this.currentStreak);
-            this.progressWidth = (this.currentStreak / 10) * 500;
+            this.progressWidth = (this.currentStreak / 10) * 100;
             localStorage.setItem("progressWidth", this.progressWidth);
           }
 
@@ -154,7 +151,13 @@ import colors from "./assets/pantone-colors.json";
           }
         }
         this.correctnessArray[this.choice] = true;
-        setTimeout("location.reload()", 2000);
+
+        if (this.currentStreak == 10) {
+            this.showConfetti = true;
+            this.guessingName = "Congratulations!"
+          } else {
+            setTimeout("location.reload()", 2000);
+          }
         return
       },
 
