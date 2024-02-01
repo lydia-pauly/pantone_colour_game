@@ -1,6 +1,11 @@
+<script setup>
+  import ConfettiExplosion from "vue-confetti-explosion";
+</script>
+
 <template>
   <div class="game-body">
     <div class="game-blocks">
+      <ConfettiExplosion v-if="showConfetti"/>
       <div class="colour-and-name">
         <div class="correct-block" :class = "{ hidden: !correctnessArray[0]}">🟩</div>
         <div
@@ -69,7 +74,7 @@
     <div class="progress-bar">
         <div class="progress-bar__value" :style="{width : progressWidth+'px'}"></div>
     </div>
-    <p id="current-streak"> {{ currentStreak }} / 15 </p>
+    <p id="current-streak"> {{ currentStreak }} / 10 </p>
     <p id="guessing-name"> {{ guessingName }}</p>
     <p id="verdict"> {{ verdict }} </p>
   </div>
@@ -96,7 +101,8 @@ import colors from "./assets/pantone-colors.json";
         progressWidth : 0,
         goodEmojis : ["😀", "😊", "🙂", "😸", "🐮"],
         badEmojis : ["😠", "😔", "😡", "😟", "😥"],
-        enableClick: true
+        enableClick: true,
+        showConfetti : false,
         }
     },
     methods: {
@@ -129,12 +135,18 @@ import colors from "./assets/pantone-colors.json";
             this.largestStreak = this.currentStreak;
             localStorage.setItem("largestStreak", this.currentStreak);
           }
+          if (this.currentStreak == 10) {
+            this.showConfetti = true;
+          }
         } else {
           this.guessingName = this.badEmojis[Math.floor(Math.random() * 5)];
-          this.currentStreak = 0;
-          localStorage.setItem("currentStreak", 0);
-          this.progressWidth = 0;
-          localStorage.setItem("progressWidth", 0);
+          if (this.currentStreak > 0) {
+            this.currentStreak = Math.floor(this.currentStreak / 2);
+            localStorage.setItem("currentStreak", this.currentStreak);
+            this.progressWidth = (this.currentStreak / 10) * 500;
+            localStorage.setItem("progressWidth", this.progressWidth);
+          }
+
         }
         for (let i = 0; i < 4; i++) {
           if (i.toString() === id.charAt(id.length - 1)) {
