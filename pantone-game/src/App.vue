@@ -5,7 +5,7 @@
 <template>
   <div class="game-body">
     <div class="game-blocks">
-      <ConfettiExplosion v-if="showConfetti"/>
+      <ConfettiExplosion v-if="showConfetti_1"/>
       <div class="colour-and-name">
         <div class="correct-block" :class = "{ hidden: !correctnessArray[0]}">🟩</div>
         <div
@@ -68,11 +68,12 @@
         :class = "{ hidden: !showNames[3]}">
         {{ names[3] }}
         </p>
-
       </div>
+      <ConfettiExplosion v-if="showConfetti_2"/>
     </div>
     <div class="progress-bar">
         <div class="progress-bar__value" :style="{width : progressWidth+'%'}"></div>
+        <ConfettiExplosion v-if="showConfetti_3"/>
     </div>
     <p id="current-streak"> {{ currentStreak }} / 10 </p>
     <p id="guessing-name"> {{ guessingName }}</p>
@@ -102,7 +103,9 @@ import colors from "./assets/pantone-colors.json";
         goodEmojis : ["😀", "😊", "🙂", "😸", "🐮"],
         badEmojis : ["😠", "😔", "😡", "😟", "😥"],
         enableClick: true,
-        showConfetti : false,
+        showConfetti_1 : false,
+        showConfetti_2 : false,
+        showConfetti_3 : false
         }
     },
     methods: {
@@ -153,8 +156,12 @@ import colors from "./assets/pantone-colors.json";
         this.correctnessArray[this.choice] = true;
 
         if (this.currentStreak == 10) {
-            this.showConfetti = true;
             this.guessingName = "Congratulations!"
+            this.showConfetti_1 = true;
+            setTimeout(1000);
+            this.showConfetti_2 = true;
+            setTimeout(1000);
+            this.showConfetti_3 = true;
           } else {
             setTimeout("location.reload()", 2000);
           }
