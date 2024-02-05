@@ -1,6 +1,11 @@
+<script setup>
+  import ConfettiExplosion from "vue-confetti-explosion";
+</script>
+
 <template>
   <div class="game-body">
     <div class="game-blocks">
+      <ConfettiExplosion v-if="showConfetti_1"/>
       <div class="colour-and-name">
         <div class="correct-block" :class = "{ hidden: !correctnessArray[0]}">🟩</div>
         <div
@@ -63,13 +68,14 @@
         :class = "{ hidden: !showNames[3]}">
         {{ names[3] }}
         </p>
-
       </div>
+      <ConfettiExplosion v-if="showConfetti_2"/>
     </div>
     <div class="progress-bar">
-        <div class="progress-bar__value" :style="{width : progressWidth+'px'}"></div>
+        <div class="progress-bar__value" :style="{width : progressWidth+'%'}"></div>
+        <ConfettiExplosion v-if="showConfetti_3"/>
     </div>
-    <p id="current-streak"> {{ currentStreak }} / 15 </p>
+    <p id="current-streak"> {{ currentStreak }} / 10 </p>
     <p id="guessing-name"> {{ guessingName }}</p>
     <p id="verdict"> {{ verdict }} </p>
   </div>
@@ -96,7 +102,10 @@ import colors from "./assets/pantone-colors.json";
         progressWidth : 0,
         goodEmojis : ["😀", "😊", "🙂", "😸", "🐮"],
         badEmojis : ["😠", "😔", "😡", "😟", "😥"],
-        enableClick: true
+        enableClick: true,
+        showConfetti_1 : false,
+        showConfetti_2 : false,
+        showConfetti_3 : false
         }
     },
     methods: {
@@ -123,7 +132,7 @@ import colors from "./assets/pantone-colors.json";
           localStorage.setItem("totalCorrect", this.totalCorrect);
           this.currentStreak++;
           localStorage.setItem("currentStreak", this.currentStreak);
-          this.progressWidth = (this.currentStreak / 10) * 500;
+          this.progressWidth = (this.currentStreak / 10) * 100;
           localStorage.setItem("progressWidth", this.progressWidth);
           if (this.currentStreak > this.largestStreak) {
             this.largestStreak = this.currentStreak;
@@ -131,10 +140,13 @@ import colors from "./assets/pantone-colors.json";
           }
         } else {
           this.guessingName = this.badEmojis[Math.floor(Math.random() * 5)];
-          this.currentStreak = 0;
-          localStorage.setItem("currentStreak", 0);
-          this.progressWidth = 0;
-          localStorage.setItem("progressWidth", 0);
+          if (this.currentStreak > 0) {
+            this.currentStreak = Math.floor(this.currentStreak / 2);
+            localStorage.setItem("currentStreak", this.currentStreak);
+            this.progressWidth = (this.currentStreak / 10) * 100;
+            localStorage.setItem("progressWidth", this.progressWidth);
+          }
+
         }
         for (let i = 0; i < 4; i++) {
           if (i.toString() === id.charAt(id.length - 1)) {
@@ -142,7 +154,17 @@ import colors from "./assets/pantone-colors.json";
           }
         }
         this.correctnessArray[this.choice] = true;
-        setTimeout("location.reload()", 2000);
+
+        if (this.currentStreak == 10) {
+            this.guessingName = "Congratulations!"
+            this.showConfetti_1 = true;
+            setTimeout(1000);
+            this.showConfetti_2 = true;
+            setTimeout(1000);
+            this.showConfetti_3 = true;
+          } else {
+            setTimeout("location.reload()", 2000);
+          }
         return
       },
 
