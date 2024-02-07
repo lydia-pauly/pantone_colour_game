@@ -16,7 +16,7 @@
     </div>
     <div class="game-blocks">
       <ConfettiExplosion v-if="showConfetti"/>
-      
+
       <div class="colour-and-name">
         <div class="correct-block" :class = "{ hidden: !correctnessArray[0]}">🟩</div>
         <div
@@ -93,6 +93,7 @@
 
 <script>
 import colors from "./assets/pantone-colors.json";
+import { parseAst } from "vite";
 
   export default {
     data() {
@@ -124,12 +125,16 @@ import colors from "./assets/pantone-colors.json";
     },
     methods: {
       setEasyMode() {
-        this.gameMode = "Easy"
+        this.gameMode = "Easy";
+        localStorage.setItem("gameMode", "Easy")
+        location.reload();
         return;
       },
 
       setHardMode() {
-        this.gameMode = "Hard"
+        this.gameMode = "Hard";
+        localStorage.setItem("gameMode", "Hard")
+        location.reload();
         return;
       },
       reset() {
@@ -137,18 +142,46 @@ import colors from "./assets/pantone-colors.json";
         localStorage.setItem("currentStreak", this.currentStreak);
         this.progressWidth = 0;
         localStorage.setItem("progressWidth", this.progressWidth);
+        this.gameMode = "Normal";
+        localStorage.setItem("gameMode", "Normal");
         location.reload();
       },
+
       setNamesAndValues() {
-        let index = 0;
-        for (let i = 0; i < 4; i++) {
-          index = Math.floor(Math.random() * colors['names'].length);
-          this.names.push(colors['names'][index]);
-          this.values.push(colors['values'][index]);
+        if (this.gameMode == "Hard") {
+          this.setNamesAndValues_HardMode()
+        } else {
+          let index = 0;
+          for (let i = 0; i < 4; i++) {
+            index = Math.floor(Math.random() * colors['names'].length);
+            this.names.push(colors['names'][index]);
+            this.values.push(colors['values'][index]);
+          }
+          this.choice = Math.floor(Math.random() * 4);
+          this.guessingName = this.names[this.choice].replace("-", " ");
+          this.guessingName = this.guessingName.charAt(0).toUpperCase() + this.guessingName.slice(1);
         }
-        this.choice = Math.floor(Math.random() * 4);
-        this.guessingName = this.names[this.choice].replace("-", " ");
-        this.guessingName = this.guessingName.charAt(0).toUpperCase() + this.guessingName.slice(1);
+        return
+      },
+
+      setNamesAndValues_HardMode() {
+        let colourChoices = [];
+        let index = Math.floor(Math.random() * colors['names'].length);
+        if (index >= (colors['names'].length - 2)) {
+          index = index - 2;
+        }
+
+        if (index <= (colors['names'].length - 2)) {
+          index = index + 2;
+        }
+
+        for(let i = 0; i < 4; i++) {
+          return;
+        }
+
+        for (let i = 1; i < 4; i++) {
+          return;
+        }
         return
       },
 
@@ -222,8 +255,16 @@ import colors from "./assets/pantone-colors.json";
           this.progressWidth = 0;
           localStorage.setItem("progressWidth", 0);
         }
-      }
-    },
+
+        if (localStorage.getItem("gameMode")) {
+          this.gameMode = localStorage.getItem("gameMode");
+        } else {
+          this.gameMode = "Normal";
+          localStorage.setItem("gameMode", "Normal");
+        }
+
+        }
+      },
 
     mounted() {
       this.setNamesAndValues();
