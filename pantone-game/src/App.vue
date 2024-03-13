@@ -3,28 +3,44 @@
 </script>
 
 <template>
-  <div class="game-body">
+  <span class="game-body">
     <h1 id="title">Pantone Pandamonium</h1>
-    <div id="explainer">
+    <span id="explainer">
       <p>Match the Pantone(tm) colour to the colour block and earn a point. 10 points wins!</p>
       <p>Current game mode: {{ gameModeMap.get(gameMode) }}</p>
-    </div>
-    <div id="button-control">
+    </span>
+    <span id="button-control">
       <button class="game-button" @click = "setEasyMode()" id="easy-mode">Easy mode</button>
       <button class="game-button" @click = "reset()" id="reset">Reset</button>
       <button class="game-button" @click = "setHardMode()" id="hard-mode">Hard mode</button>
-    </div>
-    <div class="game-blocks">
+    </span>
+    <span class="game-blocks">
       <ConfettiExplosion v-if="showConfetti"/>
+      <span class="colour-and-name" v-for="(value, index) in values">
+          <span class="correct-block" :class = "{ hidden: !correctnessArray[index]}">🟩</span>
+          <span
+          class="colour-block"
+          id="colour-block-{{ index }}"
+          :style="{ backgroundColor : values[index]}"
+          @click.once ="enableClick && checkAnswer($event)">
+          </span>
 
-      <div class="colour-and-name">
-        <div class="correct-block" :class = "{ hidden: !correctnessArray[0]}">🟩</div>
-        <div
+          <p
+          class="colour-name"
+          id="cn-{{ index }}"
+          :class = "{ hidden: !showNames[index]}">
+          {{ names[index] }}
+          </p>
+      </span>
+
+      <!-- <span class="colour-and-name">
+        <span class="correct-block" :class = "{ hidden: !correctnessArray[0]}">🟩</span>
+        <span
         class="colour-block"
         id="colour-block-0"
         :style="{ backgroundColor : values[0]}"
         @click.once ="enableClick && checkAnswer($event)">
-        </div>
+        </span>
 
         <p
         class="colour-name"
@@ -33,15 +49,15 @@
         {{ names[0] }}
         </p>
 
-      </div>
-      <div class="colour-and-name">
-        <div class="correct-block" :class = "{ hidden: !correctnessArray[1]}">🟩</div>
-        <div
+      </span>
+      <span class="colour-and-name">
+        <span class="correct-block" :class = "{ hidden: !correctnessArray[1]}">🟩</span>
+        <span
         class="colour-block"
         id="colour-block-1"
         :style="{ backgroundColor : values[1] }"
         @click.once ="enableClick && checkAnswer($event)">
-        </div>
+        </span>
 
         <p class="colour-name"
         id="cn-1"
@@ -49,15 +65,15 @@
         {{ names[1] }}
         </p>
 
-      </div>
-      <div class="colour-and-name">
-        <div class="correct-block" :class = "{ hidden: !correctnessArray[2]}">🟩</div>
-        <div
+      </span>
+      <span class="colour-and-name">
+        <span class="correct-block" :class = "{ hidden: !correctnessArray[2]}">🟩</span>
+        <span
         class="colour-block"
         id="colour-block-2"
         :style="{ backgroundColor : values[2] }"
         @click.once ="enableClick && checkAnswer($event)">
-        </div>
+        </span>
 
         <p class="colour-name"
         id="cn-2"
@@ -65,30 +81,30 @@
         {{ names[2] }}
         </p>
 
-      </div>
-      <div class="colour-and-name">
-        <div class="correct-block" :class = "{ hidden: !correctnessArray[3]}">🟩</div>
-        <div class="colour-block"
+      </span>
+      <span class="colour-and-name">
+        <span class="correct-block" :class = "{ hidden: !correctnessArray[3]}">🟩</span>
+        <span class="colour-block"
         id="colour-block-3"
         :style="{ backgroundColor : values[3]}"
         @click.once ="enableClick && checkAnswer($event)">
-        </div>
+        </span>
 
         <p class="colour-name"
         id="cn-3"
         :class = "{ hidden: !showNames[3]}">
         {{ names[3] }}
         </p>
-      </div>
+      </span> -->
       <ConfettiExplosion v-if="showConfetti"/>
-    </div>
-    <div class="progress-bar">
-        <div class="progress-bar__value" :style="{width : progressWidth+'%'}"></div>
-    </div>
+    </span>
+    <span class="progress-bar">
+        <span class="progress-bar__value" :style="{width : progressWidth+'%'}"></span>
+    </span>
     <p id="current-streak"> {{ currentStreak }} / 10 </p>
     <p id="guessing-name"> {{ guessingName }}</p>
     <p id="verdict"> {{ verdict }} </p>
-  </div>
+  </span>
 </template>
 
 <script>
