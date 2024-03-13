@@ -4,8 +4,19 @@
 
 <template>
   <div class="game-body">
+    <h1 id="title">Pantone Pandamonium</h1>
+    <div id="explainer">
+      <p>Match the Pantone(tm) colour to the colour block and earn a point. 10 points wins!</p>
+      <p>Current game mode: {{ gameModeMap.get(gameMode) }}</p>
+    </div>
+    <div id="button-control">
+      <button class="game-button" @click = "setEasyMode()" id="easy-mode">Easy mode</button>
+      <button class="game-button" @click = "reset()" id="reset">Reset</button>
+      <button class="game-button" @click = "setHardMode()" id="hard-mode">Hard mode</button>
+    </div>
     <div class="game-blocks">
-      <ConfettiExplosion v-if="showConfetti_1"/>
+      <ConfettiExplosion v-if="showConfetti"/>
+
       <div class="colour-and-name">
         <div class="correct-block" :class = "{ hidden: !correctnessArray[0]}">🟩</div>
         <div
@@ -69,11 +80,10 @@
         {{ names[3] }}
         </p>
       </div>
-      <ConfettiExplosion v-if="showConfetti_2"/>
+      <ConfettiExplosion v-if="showConfetti"/>
     </div>
     <div class="progress-bar">
         <div class="progress-bar__value" :style="{width : progressWidth+'%'}"></div>
-        <ConfettiExplosion v-if="showConfetti_3"/>
     </div>
     <p id="current-streak"> {{ currentStreak }} / 10 </p>
     <p id="guessing-name"> {{ guessingName }}</p>
@@ -103,22 +113,74 @@ import colors from "./assets/pantone-colors.json";
         goodEmojis : ["😀", "😊", "🙂", "😸", "🐮"],
         badEmojis : ["😠", "😔", "😡", "😟", "😥"],
         enableClick: true,
-        showConfetti_1 : false,
-        showConfetti_2 : false,
-        showConfetti_3 : false
+        showConfetti : false,
+        gameModeMap : new Map([
+          ["Normal", "Correct guesses get +1. Bad guesses cut your score in half"],
+          ["Easy", "Correct guesses get +1. Bad guesses get -1."],
+          ["Hard", "Correct guesses get +1. Bad guesses cut your score in half. Colours are always similar."]
+        ]),
+        gameMode: "Normal"
         }
     },
     methods: {
+      setEasyMode() {
+        this.gameMode = "Easy";
+        localStorage.setItem("gameMode", "Easy")
+        location.reload();
+        return;
+      },
+
+      setHardMode() {
+        this.gameMode = "Hard";
+        localStorage.setItem("gameMode", "Hard")
+        location.reload();
+        return;
+      },
+      reset() {
+        this.currentStreak = 0;
+        localStorage.setItem("currentStreak", this.currentStreak);
+        this.progressWidth = 0;
+        localStorage.setItem("progressWidth", this.progressWidth);
+        this.gameMode = "Normal";
+        localStorage.setItem("gameMode", "Normal");
+        location.reload();
+      },
+
       setNamesAndValues() {
-        let index = 0;
-        for (let i = 0; i < 4; i++) {
-          index = Math.floor(Math.random() * colors['names'].length);
-          this.names.push(colors['names'][index]);
-          this.values.push(colors['values'][index]);
+        if (this.gameMode == "Hard") {
+          this.setNamesAndValues_HardMode()
+        } else {
+          let index = 0;
+          for (let i = 0; i < 4; i++) {
+            index = Math.floor(Math.random() * colors['names'].length);
+            this.names.push(colors['names'][index]);
+            this.values.push(colors['values'][index]);
+          }
+          this.choice = Math.floor(Math.random() * 4);
+          this.guessingName = this.names[this.choice].replace("-", " ");
+          this.guessingName = this.guessingName.charAt(0).toUpperCase() + this.guessingName.slice(1);
         }
-        this.choice = Math.floor(Math.random() * 4);
-        this.guessingName = this.names[this.choice].replace("-", " ");
-        this.guessingName = this.guessingName.charAt(0).toUpperCase() + this.guessingName.slice(1);
+        return
+      },
+
+      setNamesAndValues_HardMode() {
+        let colourChoices = [];
+        let index = Math.floor(Math.random() * colors['names'].length);
+        if (index >= (colors['names'].length - 2)) {
+          index = index - 2;
+        }
+
+        if (index <= (colors['names'].length - 2)) {
+          index = index + 2;
+        }
+
+        for(let i = 0; i < 4; i++) {
+          return;
+        }
+
+        for (let i = 1; i < 4; i++) {
+          return;
+        }
         return
       },
 
@@ -157,13 +219,10 @@ import colors from "./assets/pantone-colors.json";
 
         if (this.currentStreak == 10) {
             this.guessingName = "Congratulations!"
-            this.showConfetti_1 = true;
-            setTimeout(1000);
-            this.showConfetti_2 = true;
-            setTimeout(1000);
-            this.showConfetti_3 = true;
+            this.showConfetti = true;
           } else {
             setTimeout("location.reload()", 2000);
+            window.scrollTo(0, document.body.scrollHeight);
           }
         return
       },
@@ -195,12 +254,21 @@ import colors from "./assets/pantone-colors.json";
           this.progressWidth = 0;
           localStorage.setItem("progressWidth", 0);
         }
-      }
-    },
+
+        if (localStorage.getItem("gameMode")) {
+          this.gameMode = localStorage.getItem("gameMode");
+        } else {
+          this.gameMode = "Normal";
+          localStorage.setItem("gameMode", "Normal");
+        }
+
+        }
+      },
 
     mounted() {
       this.setNamesAndValues();
       this.setLocalStorage();
+      window.scrollTo(0, document.body.scrollHeight);
     }
     }
 </script>
@@ -244,6 +312,10 @@ import colors from "./assets/pantone-colors.json";
     margin-top: 20px;
   }
 
+  #explainer {
+    margin-bottom: 20px;
+  }
+
   #guessing-name {
     display: flex;
     justify-content: center;
@@ -262,6 +334,7 @@ import colors from "./assets/pantone-colors.json";
     display: flex;
     flex-direction: column;
     justify-content: center;
+    width: 100%;
   }
 
   .correct-guess {
@@ -275,13 +348,42 @@ import colors from "./assets/pantone-colors.json";
     height: 3em;
     margin-top: 40px;
     border-radius: 10em;
-    background-color: black;
+    background-color: var(--color-background-soft);
     justify-content: center;
+    overflow: hidden;
   }
 
   .progress-bar__value {
     height: 3em;
     border-radius: 10em;
     background-color: #A5CA77;
+    transition: width 0.3s ease-in-out;
+  }
+
+  #button-control {
+    display: flex;
+    width: 100%;
+    justify-content: space-around;
+    margin-bottom: 20px;
+  }
+
+  .game-button {
+    font-family: 'Courier New', Courier, monospace;
+    background-color: var(--color-background);
+    border-radius: 3px;
+    border: solid var(--vt-c-divider-light-1);
+    color: #6ed475;
+    padding: 10px;
+  }
+
+  .game-button:hover {
+    background-color: var(--color-background-soft);
+    transition: background-color 0.2s ease-in-out;
+  }
+
+  #title {
+    font-family: 'Zilla Slab', serif;
+    color: whitesmoke;
+    font-size: 60px;
   }
 </style>
