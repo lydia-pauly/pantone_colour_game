@@ -93,7 +93,6 @@
 
 <script>
 import colors from "./assets/pantone-colors.json";
-import { parseAst } from "vite";
 
   export default {
     data() {
@@ -313,6 +312,10 @@ import { parseAst } from "vite";
     margin-top: 20px;
   }
 
+  #explainer {
+    margin-bottom: 20px;
+  }
+
   #guessing-name {
     display: flex;
     justify-content: center;
@@ -331,6 +334,7 @@ import { parseAst } from "vite";
     display: flex;
     flex-direction: column;
     justify-content: center;
+    width: 100%;
   }
 
   .correct-guess {
