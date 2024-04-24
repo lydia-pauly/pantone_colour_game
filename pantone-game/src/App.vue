@@ -71,20 +71,24 @@ import colors from "./assets/pantone-colors.json";
           ["Easy", "Correct guesses get +1. Bad guesses get -1."],
           ["Hard", "Correct guesses get +1. Bad guesses cut your score in half. Colours are always similar."]
         ]),
-        gameMode: "Normal"
+        gameMode: ""
         }
     },
     methods: {
       setEasyMode() {
         this.gameMode = "Easy";
-        localStorage.setItem("gameMode", "Easy")
+        localStorage.setItem("gameMode", "Easy");
         location.reload();
         return;
       },
 
       setHardMode() {
         this.gameMode = "Hard";
-        localStorage.setItem("gameMode", "Hard")
+        localStorage.setItem("gameMode", "Hard");
+        this.currentStreak = 0;
+        localStorage.setItem("currentStreak", this.currentStreak);
+        this.progressWidth = 0;
+        localStorage.setItem("progressWidth", this.progressWidth);
         location.reload();
         return;
       },
@@ -99,6 +103,8 @@ import colors from "./assets/pantone-colors.json";
       },
 
       setNamesAndValues() {
+        console.log("the game mode is:");
+        console.log(localStorage.getItem("gameMode"));
         console.log(this.gameMode);
         if (this.gameMode == "Hard") {
           this.setNamesAndValues_HardMode()
@@ -118,26 +124,19 @@ import colors from "./assets/pantone-colors.json";
 
       setNamesAndValues_HardMode() {
         let index = Math.floor(Math.random() * colors['names'].length);
-
         if (index < 2) {
           index =+ 2;
         }
-
         if (index > colors['names'].length) {
           index =- 1;
         }
-
         for (let i = 0; i < 4; i++) {
           this.names.push(colors['names'][(index - 2) + i]);
           this.values.push(colors['values'][(index - 2) + i]);
         }
-
         this.choice = Math.floor(Math.random() * 4);
         this.guessingName = this.names[this.choice].replace("-", " ");
         this.guessingName = this.guessingName.charAt(0).toUpperCase() + this.guessingName.slice(1);
-
-        console.log(this.names);
-        console.log(this.values);
         return
       },
 
@@ -227,8 +226,8 @@ import colors from "./assets/pantone-colors.json";
       },
 
     mounted() {
-      this.setNamesAndValues();
       this.setLocalStorage();
+      this.setNamesAndValues();
       window.scrollTo(0, document.body.scrollHeight);
     }
     }
