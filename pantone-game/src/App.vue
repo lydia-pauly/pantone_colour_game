@@ -3,108 +3,44 @@
 </script>
 
 <template>
-  <span class="game-body">
+  <div class="game-body">
     <h1 id="title">Pantone Pandamonium</h1>
-    <span id="explainer">
+    <div id="explainer">
       <p>Match the Pantone(tm) colour to the colour block and earn a point. 10 points wins!</p>
       <p>Current game mode: {{ gameModeMap.get(gameMode) }}</p>
-    </span>
-    <span id="button-control">
+    </div>
+    <div id="button-control">
       <button class="game-button" @click = "setEasyMode()" id="easy-mode">Easy mode</button>
       <button class="game-button" @click = "reset()" id="reset">Reset</button>
       <button class="game-button" @click = "setHardMode()" id="hard-mode">Hard mode</button>
-    </span>
-    <span class="game-blocks">
+    </div>
+    <div class="game-blocks">
       <ConfettiExplosion v-if="showConfetti"/>
-      <span class="colour-and-name" v-for="(value, index) in values">
-          <span class="correct-block" :class = "{ hidden: !correctnessArray[index]}">🟩</span>
-          <span
+      <div class="colour-and-name" v-for="(value, index) in values" :key="index">
+          <div class="correct-block" :class = "{ hidden: !correctnessArray[index]}">🟩</div>
+          <div
           class="colour-block"
-          id="colour-block-{{ index }}"
+          :id="'colour-block-' + index"
           :style="{ backgroundColor : values[index]}"
           @click.once ="enableClick && checkAnswer($event)">
-          </span>
+          </div>
 
           <p
           class="colour-name"
-          id="cn-{{ index }}"
+          :id="'cn-' + index"
           :class = "{ hidden: !showNames[index]}">
           {{ names[index] }}
           </p>
-      </span>
-
-      <!-- <span class="colour-and-name">
-        <span class="correct-block" :class = "{ hidden: !correctnessArray[0]}">🟩</span>
-        <span
-        class="colour-block"
-        id="colour-block-0"
-        :style="{ backgroundColor : values[0]}"
-        @click.once ="enableClick && checkAnswer($event)">
-        </span>
-
-        <p
-        class="colour-name"
-        id="cn-0"
-        :class = "{ hidden: !showNames[0]}">
-        {{ names[0] }}
-        </p>
-
-      </span>
-      <span class="colour-and-name">
-        <span class="correct-block" :class = "{ hidden: !correctnessArray[1]}">🟩</span>
-        <span
-        class="colour-block"
-        id="colour-block-1"
-        :style="{ backgroundColor : values[1] }"
-        @click.once ="enableClick && checkAnswer($event)">
-        </span>
-
-        <p class="colour-name"
-        id="cn-1"
-        :class = "{ hidden: !showNames[1]}">
-        {{ names[1] }}
-        </p>
-
-      </span>
-      <span class="colour-and-name">
-        <span class="correct-block" :class = "{ hidden: !correctnessArray[2]}">🟩</span>
-        <span
-        class="colour-block"
-        id="colour-block-2"
-        :style="{ backgroundColor : values[2] }"
-        @click.once ="enableClick && checkAnswer($event)">
-        </span>
-
-        <p class="colour-name"
-        id="cn-2"
-        :class = "{ hidden: !showNames[2]}">
-        {{ names[2] }}
-        </p>
-
-      </span>
-      <span class="colour-and-name">
-        <span class="correct-block" :class = "{ hidden: !correctnessArray[3]}">🟩</span>
-        <span class="colour-block"
-        id="colour-block-3"
-        :style="{ backgroundColor : values[3]}"
-        @click.once ="enableClick && checkAnswer($event)">
-        </span>
-
-        <p class="colour-name"
-        id="cn-3"
-        :class = "{ hidden: !showNames[3]}">
-        {{ names[3] }}
-        </p>
-      </span> -->
+      </div>
       <ConfettiExplosion v-if="showConfetti"/>
-    </span>
-    <span class="progress-bar">
-        <span class="progress-bar__value" :style="{width : progressWidth+'%'}"></span>
-    </span>
+    </div>
+    <div class="progress-bar">
+        <div class="progress-bar__value" :style="{width : progressWidth + '%'}"></div>
+    </div>
     <p id="current-streak"> {{ currentStreak }} / 10 </p>
     <p id="guessing-name"> {{ guessingName }}</p>
     <p id="verdict"> {{ verdict }} </p>
-  </span>
+  </div>
 </template>
 
 <script>
@@ -163,6 +99,7 @@ import colors from "./assets/pantone-colors.json";
       },
 
       setNamesAndValues() {
+        console.log(this.gameMode);
         if (this.gameMode == "Hard") {
           this.setNamesAndValues_HardMode()
         } else {
@@ -180,28 +117,33 @@ import colors from "./assets/pantone-colors.json";
       },
 
       setNamesAndValues_HardMode() {
-        let colourChoices = [];
         let index = Math.floor(Math.random() * colors['names'].length);
-        if (index >= (colors['names'].length - 2)) {
-          index = index - 2;
+
+        if (index < 2) {
+          index =+ 2;
         }
 
-        if (index <= (colors['names'].length - 2)) {
-          index = index + 2;
+        if (index > colors['names'].length) {
+          index =- 1;
         }
 
-        for(let i = 0; i < 4; i++) {
-          return;
+        for (let i = 0; i < 4; i++) {
+          this.names.push(colors['names'][(index - 2) + i]);
+          this.values.push(colors['values'][(index - 2) + i]);
         }
 
-        for (let i = 1; i < 4; i++) {
-          return;
-        }
+        this.choice = Math.floor(Math.random() * 4);
+        this.guessingName = this.names[this.choice].replace("-", " ");
+        this.guessingName = this.guessingName.charAt(0).toUpperCase() + this.guessingName.slice(1);
+
+        console.log(this.names);
+        console.log(this.values);
         return
       },
 
       checkAnswer(e) {
         let id = e["srcElement"]["id"];
+        console.log(id);
         this.enableClick = false;
 
         if ((this.choice).toString() === id.charAt(id.length - 1)) {
@@ -240,6 +182,9 @@ import colors from "./assets/pantone-colors.json";
             setTimeout("location.reload()", 2000);
             window.scrollTo(0, document.body.scrollHeight);
           }
+
+        console.log(this.progressWidth);
+
         return
       },
 
