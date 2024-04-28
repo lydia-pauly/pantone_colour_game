@@ -2,13 +2,18 @@
   import ConfettiExplosion from "vue-confetti-explosion";
 </script>
 
-<template>
-  <div class="game-body">
-    <h1 id="title">Pantone Pandamonium</h1>
-    <div id="explainer">
-      <p>Match the Pantone(tm) colour to the colour block and earn a point. 10 points wins!</p>
-      <p>Current game mode: {{ gameModeMap.get(gameMode) }}</p>
+<template class=".no-transition">
+  <div id="sidebar">
+    <div id="sidebar-text-box">
+      <p class="sidebar-text__title">The rules of the game</p>
+      <p class="sidebar-text">Match the Pantone<sup>(tm)</sup> colour to the colour block and earn a point. 10 points wins!</p>
+      <p class="sidebar-text">Current game mode: {{ gameModeMap.get(gameMode) }}</p>
     </div>
+    <button id="sidebar-prompt" @click = "toggleSidebar()"> {{ sidebarPrompt }}</button>
+  </div>
+
+  <div class="game-body">
+    <h1 id="title">Pantone Panic</h1>
     <div id="button-control">
       <button class="game-button" @click = "setEasyMode()" id="easy-mode">Easy mode</button>
       <button class="game-button" @click = "reset()" id="reset">Reset</button>
@@ -64,6 +69,7 @@ import colors from "./assets/pantone-colors.json";
         progressWidth : 0,
         goodEmojis : ["😀", "😊", "🙂", "😸", "🐮"],
         badEmojis : ["😠", "😔", "😡", "😟", "😥"],
+        sidebarPrompt : "Show me!",
         enableClick: true,
         showConfetti : false,
         gameModeMap : new Map([
@@ -80,6 +86,15 @@ import colors from "./assets/pantone-colors.json";
         localStorage.setItem("gameMode", "Easy");
         location.reload();
         return;
+      },
+
+      toggleSidebar() {
+        if (this.sidebarPrompt == "Show me!") {
+          this.sidebarPrompt = "Hide me!";
+        } else {
+          this.sidebarPrompt = "Show me!";
+        }
+        return
       },
 
       setHardMode() {
@@ -237,11 +252,23 @@ import colors from "./assets/pantone-colors.json";
 @import url('https://fonts.googleapis.com/css2?family=Cute+Font&family=Oswald:wght@500&family=Roboto+Condensed:wght@700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Cute+Font&family=Zilla+Slab:wght@500&display=swap');
 
+body {
+  min-height: 100vh;
+  min-width: 100%;
+}
+
+  .sidebar-prompt {
+    z-index: 10;
+    position: fixed;
+    height: 20px;
+  }
+
   .colour-block {
     width: 200px;
     height: 200px;
     padding: 10px;
     margin: 10px;
+    z-index: 9;
   }
 
   .game-blocks {
@@ -283,7 +310,7 @@ import colors from "./assets/pantone-colors.json";
     font-family: 'Zilla Slab', serif;
     font-size: 80px;
     color: white;
-
+    margin-top: -20px;
   }
 
   .hidden {
@@ -306,7 +333,7 @@ import colors from "./assets/pantone-colors.json";
   .progress-bar {
     width: 100%;
     height: 3em;
-    margin-top: 40px;
+    margin-top: 20px;
     border-radius: 10em;
     background-color: var(--color-background-soft);
     justify-content: center;
@@ -345,5 +372,30 @@ import colors from "./assets/pantone-colors.json";
     font-family: 'Zilla Slab', serif;
     color: whitesmoke;
     font-size: 60px;
+  }
+
+  #sidebar {
+    padding-top: 0;
+  }
+
+  #sidebar-text-box {
+    padding: 50px 20px 20px 20px;
+    z-index: 10;
+    position: fixed;
+    left: 0;
+    width: 200px;
+    background-color: #6ed475;
+    height: 100vh;
+  }
+
+  .sidebar-text {
+    padding-top: 20px;
+    color: #222222;
+  }
+
+  .sidebar-text__title {
+    font-family: 'Zilla Slab', serif;
+    color: #222;
+    font-size: 30px;
   }
 </style>
