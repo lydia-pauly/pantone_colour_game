@@ -9,7 +9,7 @@
       <p class="sidebar-text">Match the Pantone<sup>(tm)</sup> colour to the colour block and earn a point. 10 points wins!</p>
       <p class="sidebar-text">Current game mode: {{ gameModeMap.get(gameMode) }}</p>
     </div>
-    <button id="sidebar-prompt" @click = "toggleSidebar()"> {{ sidebarPrompt }}</button>
+    <!--<button id="sidebar-prompt" @click = "toggleSidebar()"> {{ sidebarPrompt }}</button>-->
   </div>
 
   <div class="game-body">
