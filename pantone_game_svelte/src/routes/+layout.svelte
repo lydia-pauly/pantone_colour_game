@@ -1,8 +1,5 @@
 <script>
   import "../app.pcss";
-  import { notion } from "$lib/notion_api.js";
-
-  console.log(notion);
 </script>
 
 <div class="navbar bg-base-100">
