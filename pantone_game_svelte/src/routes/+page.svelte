@@ -1,39 +1,43 @@
 <script>
   import ColourSquare from "$lib/ColourSquare.svelte";
   import colourJSON from "$lib/pantone-colors.json";
+  import ColourNameGuess from "$lib/ColourNameGuess.svelte";
+  import { onMount } from "svelte";
 
-  let colour_array = [];
-  let colour_choice = colourJSON["values"][78];
-
-  function setColours() {
-    console.log("Pressed!");
-    console.log(colourJSON);
-    colour_array = [];
+  onMount(() => {
+    hex_value_array = [];
+    colour_name_array = [];
     for (let step = 0; step < 4; step++) {
       let selector = Math.floor(Math.random() * colourJSON["names"].length);
-      colour_array = [...colour_array, colourJSON["values"][selector]];
-      console.log(colour_array);
-      // console.log(selector);
-      // console.log(colourJSON["names"][selector]);
-      // console.log(colourJSON["values"][selector]);
+      hex_value_array = [...hex_value_array, colourJSON["values"][selector]];
+      colour_name_array = [...colour_name_array, colourJSON["names"][selector]];
     }
-  }
+    chosen_colour = colour_name_array[Math.floor(Math.random() * 4)];
+  });
+
+  let hex_value_array = [];
+  let colour_name_array = [];
+  let chosen_colour = "not yet defined";
 </script>
 
-<h1>content on main page</h1>
 <div class="colour-square-bar">
-  <ColourSquare --square-colour={colour_array[0]} />
-  <ColourSquare --square-colour={colour_array[1]} />
-  <ColourSquare --square-colour={colour_array[2]} />
-  <ColourSquare --square-colour={colour_array[3]} />
+  {#each { length: 4 } as _, i}
+    <ColourSquare
+      --square-colour={hex_value_array[i]}
+      colour_name={colour_name_array[i]}
+    />
+  {/each}
 </div>
 
-<button on:click={setColours}>Set colours</button>
+<ColourNameGuess {chosen_colour} />
+
+<!-- <button on:click={setColours}>Set colours</button> -->
 
 <style>
   .colour-square-bar {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
+    margin: auto;
   }
 </style>
