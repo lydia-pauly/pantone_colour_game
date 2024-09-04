@@ -2,13 +2,18 @@
   import ConfettiExplosion from "vue-confetti-explosion";
 </script>
 
-<template>
-  <div class="game-body">
-    <h1 id="title">Pantone Pandamonium</h1>
-    <div id="explainer">
-      <p>Match the Pantone(tm) colour to the colour block and earn a point. 10 points wins!</p>
-      <p>Current game mode: {{ gameModeMap.get(gameMode) }}</p>
+<template class=".no-transition">
+  <div id="sidebar">
+    <div id="sidebar-text-box">
+      <p class="sidebar-text__title">The rules of the game</p>
+      <p class="sidebar-text">Match the Pantone<sup>(tm)</sup> colour to the colour block and earn a point. 10 points wins!</p>
+      <p class="sidebar-text">Current game mode: {{ gameModeMap.get(gameMode) }}</p>
     </div>
+    <!--<button id="sidebar-prompt" @click = "toggleSidebar()"> {{ sidebarPrompt }}</button>-->
+  </div>
+
+  <div class="game-body">
+    <h1 id="title">Pantone Panic</h1>
     <div id="button-control">
       <button class="game-button" @click = "setEasyMode()" id="easy-mode">Easy mode</button>
       <button class="game-button" @click = "reset()" id="reset">Reset</button>
@@ -16,74 +21,26 @@
     </div>
     <div class="game-blocks">
       <ConfettiExplosion v-if="showConfetti"/>
+      <div class="colour-and-name" v-for="(value, index) in values" :key="index">
+          <div class="correct-block" :class = "{ hidden: !correctnessArray[index]}">🟩</div>
+          <div
+          class="colour-block"
+          :id="'colour-block-' + index"
+          :style="{ backgroundColor : values[index]}"
+          @click.once ="enableClick && checkAnswer($event)">
+          </div>
 
-      <div class="colour-and-name">
-        <div class="correct-block" :class = "{ hidden: !correctnessArray[0]}">🟩</div>
-        <div
-        class="colour-block"
-        id="colour-block-0"
-        :style="{ backgroundColor : values[0]}"
-        @click.once ="enableClick && checkAnswer($event)">
-        </div>
-
-        <p
-        class="colour-name"
-        id="cn-0"
-        :class = "{ hidden: !showNames[0]}">
-        {{ names[0] }}
-        </p>
-
-      </div>
-      <div class="colour-and-name">
-        <div class="correct-block" :class = "{ hidden: !correctnessArray[1]}">🟩</div>
-        <div
-        class="colour-block"
-        id="colour-block-1"
-        :style="{ backgroundColor : values[1] }"
-        @click.once ="enableClick && checkAnswer($event)">
-        </div>
-
-        <p class="colour-name"
-        id="cn-1"
-        :class = "{ hidden: !showNames[1]}">
-        {{ names[1] }}
-        </p>
-
-      </div>
-      <div class="colour-and-name">
-        <div class="correct-block" :class = "{ hidden: !correctnessArray[2]}">🟩</div>
-        <div
-        class="colour-block"
-        id="colour-block-2"
-        :style="{ backgroundColor : values[2] }"
-        @click.once ="enableClick && checkAnswer($event)">
-        </div>
-
-        <p class="colour-name"
-        id="cn-2"
-        :class = "{ hidden: !showNames[2]}">
-        {{ names[2] }}
-        </p>
-
-      </div>
-      <div class="colour-and-name">
-        <div class="correct-block" :class = "{ hidden: !correctnessArray[3]}">🟩</div>
-        <div class="colour-block"
-        id="colour-block-3"
-        :style="{ backgroundColor : values[3]}"
-        @click.once ="enableClick && checkAnswer($event)">
-        </div>
-
-        <p class="colour-name"
-        id="cn-3"
-        :class = "{ hidden: !showNames[3]}">
-        {{ names[3] }}
-        </p>
+          <p
+          class="colour-name"
+          :id="'cn-' + index"
+          :class = "{ hidden: !showNames[index]}">
+          {{ names[index] }}
+          </p>
       </div>
       <ConfettiExplosion v-if="showConfetti"/>
     </div>
     <div class="progress-bar">
-        <div class="progress-bar__value" :style="{width : progressWidth+'%'}"></div>
+        <div class="progress-bar__value" :style="{width : progressWidth + '%'}"></div>
     </div>
     <p id="current-streak"> {{ currentStreak }} / 10 </p>
     <p id="guessing-name"> {{ guessingName }}</p>
@@ -112,6 +69,7 @@ import colors from "./assets/pantone-colors.json";
         progressWidth : 0,
         goodEmojis : ["😀", "😊", "🙂", "😸", "🐮"],
         badEmojis : ["😠", "😔", "😡", "😟", "😥"],
+        sidebarPrompt : "Show me!",
         enableClick: true,
         showConfetti : false,
         gameModeMap : new Map([
@@ -119,20 +77,33 @@ import colors from "./assets/pantone-colors.json";
           ["Easy", "Correct guesses get +1. Bad guesses get -1."],
           ["Hard", "Correct guesses get +1. Bad guesses cut your score in half. Colours are always similar."]
         ]),
-        gameMode: "Normal"
+        gameMode: ""
         }
     },
     methods: {
       setEasyMode() {
         this.gameMode = "Easy";
-        localStorage.setItem("gameMode", "Easy")
+        localStorage.setItem("gameMode", "Easy");
         location.reload();
         return;
       },
 
+      toggleSidebar() {
+        if (this.sidebarPrompt == "Show me!") {
+          this.sidebarPrompt = "Hide me!";
+        } else {
+          this.sidebarPrompt = "Show me!";
+        }
+        return
+      },
+
       setHardMode() {
         this.gameMode = "Hard";
-        localStorage.setItem("gameMode", "Hard")
+        localStorage.setItem("gameMode", "Hard");
+        this.currentStreak = 0;
+        localStorage.setItem("currentStreak", this.currentStreak);
+        this.progressWidth = 0;
+        localStorage.setItem("progressWidth", this.progressWidth);
         location.reload();
         return;
       },
@@ -147,6 +118,9 @@ import colors from "./assets/pantone-colors.json";
       },
 
       setNamesAndValues() {
+        console.log("the game mode is:");
+        console.log(localStorage.getItem("gameMode"));
+        console.log(this.gameMode);
         if (this.gameMode == "Hard") {
           this.setNamesAndValues_HardMode()
         } else {
@@ -164,28 +138,26 @@ import colors from "./assets/pantone-colors.json";
       },
 
       setNamesAndValues_HardMode() {
-        let colourChoices = [];
         let index = Math.floor(Math.random() * colors['names'].length);
-        if (index >= (colors['names'].length - 2)) {
-          index = index - 2;
+        if (index < 2) {
+          index =+ 2;
         }
-
-        if (index <= (colors['names'].length - 2)) {
-          index = index + 2;
+        if (index > colors['names'].length) {
+          index =- 1;
         }
-
-        for(let i = 0; i < 4; i++) {
-          return;
+        for (let i = 0; i < 4; i++) {
+          this.names.push(colors['names'][(index - 2) + i]);
+          this.values.push(colors['values'][(index - 2) + i]);
         }
-
-        for (let i = 1; i < 4; i++) {
-          return;
-        }
+        this.choice = Math.floor(Math.random() * 4);
+        this.guessingName = this.names[this.choice].replace("-", " ");
+        this.guessingName = this.guessingName.charAt(0).toUpperCase() + this.guessingName.slice(1);
         return
       },
 
       checkAnswer(e) {
         let id = e["srcElement"]["id"];
+        console.log(id);
         this.enableClick = false;
 
         if ((this.choice).toString() === id.charAt(id.length - 1)) {
@@ -224,6 +196,9 @@ import colors from "./assets/pantone-colors.json";
             setTimeout("location.reload()", 2000);
             window.scrollTo(0, document.body.scrollHeight);
           }
+
+        console.log(this.progressWidth);
+
         return
       },
 
@@ -266,8 +241,8 @@ import colors from "./assets/pantone-colors.json";
       },
 
     mounted() {
-      this.setNamesAndValues();
       this.setLocalStorage();
+      this.setNamesAndValues();
       window.scrollTo(0, document.body.scrollHeight);
     }
     }
@@ -277,11 +252,23 @@ import colors from "./assets/pantone-colors.json";
 @import url('https://fonts.googleapis.com/css2?family=Cute+Font&family=Oswald:wght@500&family=Roboto+Condensed:wght@700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Cute+Font&family=Zilla+Slab:wght@500&display=swap');
 
+body {
+  min-height: 100vh;
+  min-width: 100%;
+}
+
+  .sidebar-prompt {
+    z-index: 10;
+    position: fixed;
+    height: 20px;
+  }
+
   .colour-block {
     width: 200px;
     height: 200px;
     padding: 10px;
     margin: 10px;
+    z-index: 9;
   }
 
   .game-blocks {
@@ -323,7 +310,7 @@ import colors from "./assets/pantone-colors.json";
     font-family: 'Zilla Slab', serif;
     font-size: 80px;
     color: white;
-
+    margin-top: -20px;
   }
 
   .hidden {
@@ -346,7 +333,7 @@ import colors from "./assets/pantone-colors.json";
   .progress-bar {
     width: 100%;
     height: 3em;
-    margin-top: 40px;
+    margin-top: 20px;
     border-radius: 10em;
     background-color: var(--color-background-soft);
     justify-content: center;
@@ -385,5 +372,30 @@ import colors from "./assets/pantone-colors.json";
     font-family: 'Zilla Slab', serif;
     color: whitesmoke;
     font-size: 60px;
+  }
+
+  #sidebar {
+    padding-top: 0;
+  }
+
+  #sidebar-text-box {
+    padding: 50px 20px 20px 20px;
+    z-index: 10;
+    position: fixed;
+    left: 0;
+    width: 200px;
+    background-color: #6ed475;
+    height: 100vh;
+  }
+
+  .sidebar-text {
+    padding-top: 20px;
+    color: #222222;
+  }
+
+  .sidebar-text__title {
+    font-family: 'Zilla Slab', serif;
+    color: #222;
+    font-size: 30px;
   }
 </style>
