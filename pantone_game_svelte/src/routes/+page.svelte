@@ -18,7 +18,10 @@
   $: score = 0;
   $: guessing = true;
   $: correct = false;
+  
   const max_score = 10;
+  $: training_mode_toggle = "off";
+
 
   //Set up initial game state upon mount by selecting colours to guess and their respective names
   onMount(() => {
@@ -43,8 +46,10 @@
 
   function changeHiddenProperty() {
     if (hidden) {
+      training_mode_toggle = "off";
       setGame();
     } else {
+      training_mode_toggle = "on";
       score = 0;
     }
     hidden = !hidden;
@@ -105,7 +110,7 @@
 <div class="button-wrapper">
   <div class="training-mode">
     <button class="training-mode-button" on:click={changeHiddenProperty}
-      >Training mode</button
+      >Training mode: {training_mode_toggle}</button
     >
     <p class="training-mode-warning">Warning: resets score!</p>
   </div>
