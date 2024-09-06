@@ -2,14 +2,7 @@
   export let colour_name;
   export let hidden;
   export let correct_answer;
-
-  function checkAnswer(correct_answer, colour_name) {
-    if (correct_answer == colour_name) {
-      alert("Correct!");
-    } else {
-      alert("Incorrect!");
-    }
-  }
+  export let checkAnswer;
 </script>
 
 <div class="colour-name-pair">
