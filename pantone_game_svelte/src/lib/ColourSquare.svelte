@@ -1,17 +1,29 @@
 <script>
-  export let colour_name = "not yet set";
-  export let hex_value = "#000";
+  export let colour_name;
+  export let hidden;
+  export let correct_answer;
+  export let checkAnswer;
 </script>
 
 <div class="colour-name-pair">
-  <div class="colour-square"></div>
-  <p class="colour-name">{colour_name}</p>
+  <button
+    class="colour-square"
+    on:click={() => checkAnswer(correct_answer, colour_name)}
+  >
+  </button>
+  {#if hidden}
+    <p class="colour-name main-text">{colour_name.replaceAll("-", " ")}</p>
+  {:else}
+    <p class="colour-name main-text" style="visibility:hidden">
+      {colour_name}
+    </p>
+  {/if}
 </div>
 
 <style>
   .colour-square {
-    height: 5em;
-    width: 5em;
+    height: 8em;
+    width: 8em;
     margin: 2em auto;
     background-color: var(--square-colour);
     margin-bottom: 0px;
@@ -25,5 +37,6 @@
 
   .colour-name {
     margin-top: 0.5em;
+    margin: auto;
   }
 </style>
