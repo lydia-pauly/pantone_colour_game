@@ -1,4 +1,4 @@
-<script lang="ts">
+<script>
   //Import components from /lib
   import ColourSquare from "$lib/ColourSquare.svelte";
   import ColourNameGuess from "$lib/ColourNameGuess.svelte";
@@ -18,10 +18,9 @@
   $: score = 0;
   $: guessing = true;
   $: correct = false;
-  
+
   const max_score = 10;
   $: training_mode_toggle = "off";
-
 
   //Set up initial game state upon mount by selecting colours to guess and their respective names
   onMount(() => {
@@ -163,5 +162,9 @@
     margin-top: 0;
     padding-top: 0;
     font-size: 13px;
+  }
+
+  .reload-game-text {
+    color: orangered;
   }
 </style>
