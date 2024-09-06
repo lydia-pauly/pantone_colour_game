@@ -1,9 +1,10 @@
 <script>
   export let score;
   export let hidden;
+  export let max_score;
 </script>
 
-<p class="score">{score} / 10</p>
+<p class="score">{score} / {max_score}</p>
 
 {#if hidden}
   <p class="freeze-notice">*^* I freeze on training mode *^*</p>
@@ -39,6 +40,7 @@
   .score {
     margin: auto;
     margin-bottom: 10px;
+    margin-top: 30px;
     font-size: 30px;
     font-family: "Courier New", Courier, monospace;
   }
