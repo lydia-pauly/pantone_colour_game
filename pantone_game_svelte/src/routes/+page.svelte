@@ -16,6 +16,8 @@
   let correct_answer = "";
   $: hidden = false;
   $: score = 0;
+  $: guessing = true;
+  $: correct = false;
 
   //Set up initial game state upon mount by selecting colours to guess and their respective names
   onMount(() => {
@@ -31,28 +33,33 @@
       colour_name_array = [...colour_name_array, colourJSON["names"][selector]];
     }
     correct_answer = colour_name_array[Math.floor(Math.random() * 4)];
-    console.log("Correct answer is", correct_answer);
+    guessing = true;
+  }
+
+  function randomiser(array) {
+    return array[Math.floor(Math.random() * array.length)];
   }
 
   function changeHiddenProperty() {
     if (hidden) {
       setGame();
-      hidden = !hidden;
     } else {
-      hidden = !hidden;
+      score = 0;
     }
+    hidden = !hidden;
   }
 
   function checkAnswer(correct_answer, colour_name) {
-    if (correct_answer == colour_name) {
-      alert("Correct!");
+    guessing = false;
+    if (correct_answer === colour_name) {
+      correct = true;
       if (!hidden) {
         score++;
       }
     } else {
-      alert("Incorrect!");
+      correct = false;
     }
-    setGame();
+    setTimeout(setGame, 1500);
   }
 </script>
 
@@ -71,19 +78,24 @@
 </div>
 
 <div class="colour-guess main-text">
-  <ColourNameGuess {correct_answer} />
+  <ColourNameGuess {correct_answer} {guessing} {correct} {randomiser} />
 </div>
 
 <div class="score">
   <Score {score} --progress-bar-width={score * 10 + "%"} {hidden} />
 </div>
 
-<button class="training-mode" on:click={changeHiddenProperty}
-  >Training mode</button
->
-<button class="Reload game" on:click={() => location.reload()}
-  >Reload game</button
->
+<div class="button-wrapper">
+  <div class="training-mode">
+    <button class="training-mode-button" on:click={changeHiddenProperty}
+      >Training mode</button
+    >
+    <p class="training-mode-warning">Warning: resets score!</p>
+  </div>
+  <button class="reload-game" on:click={() => location.reload()}
+    >Reload game</button
+  >
+</div>
 
 <style>
   .colour-square-bar {
@@ -101,5 +113,26 @@
 
   .score {
     flex-direction: column;
+  }
+
+  .button-wrapper {
+    width: 100%;
+    display: flex;
+    margin-top: 15px;
+  }
+
+  .training-mode,
+  .reload-game {
+    margin: auto;
+  }
+
+  .training-mode-button {
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+  .training-mode-warning {
+    margin-top: 0;
+    padding-top: 0;
+    font-size: 13px;
   }
 </style>
