@@ -17,8 +17,6 @@
 
   #main-heading {
     margin: 10px auto;
-    font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
-      "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
     font-size: 3em;
   }
 </style>

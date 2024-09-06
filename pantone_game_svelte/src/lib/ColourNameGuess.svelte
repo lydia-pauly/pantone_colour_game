@@ -6,7 +6,7 @@
 
 <style>
   p {
-    margin: 2em auto;
+    margin: 1em auto;
     font-size: 2em;
   }
 </style>
