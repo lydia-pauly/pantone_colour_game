@@ -14,7 +14,7 @@
   let hex_value_array = [];
   $: colour_name_array = [];
   let correct_answer = "";
-  let hidden = false;
+  $: hidden = false;
   $: score = 0;
 
   //Set up initial game state upon mount by selecting colours to guess and their respective names
@@ -35,13 +35,20 @@
   }
 
   function changeHiddenProperty() {
-    hidden = !hidden;
+    if (hidden) {
+      setGame();
+      hidden = !hidden;
+    } else {
+      hidden = !hidden;
+    }
   }
 
   function checkAnswer(correct_answer, colour_name) {
     if (correct_answer == colour_name) {
       alert("Correct!");
-      score++;
+      if (!hidden) {
+        score++;
+      }
     } else {
       alert("Incorrect!");
     }
@@ -50,6 +57,7 @@
 </script>
 
 <!-- {checkAnswer} allows me to pass the function down as a prop - I can call back with arguments from the child -->
+<!-- --square-colour={variable} allows me to pass down a prop as a CSS variable which I reference in <style> -->
 <div class="colour-square-bar">
   {#each { length: 4 } as _, i}
     <ColourSquare
@@ -67,11 +75,15 @@
 </div>
 
 <div class="score">
-  <Score {score} />
+  <Score {score} --progress-bar-width={score * 10 + "%"} {hidden} />
 </div>
 
-<button on:click={changeHiddenProperty}>Change hidden</button>
-<button on:click={() => setGame()}>Reload game</button>
+<button class="training-mode" on:click={changeHiddenProperty}
+  >Training mode</button
+>
+<button class="Reload game" on:click={() => location.reload()}
+  >Reload game</button
+>
 
 <style>
   .colour-square-bar {
@@ -85,5 +97,9 @@
   .score {
     display: flex;
     margin: auto;
+  }
+
+  .score {
+    flex-direction: column;
   }
 </style>
