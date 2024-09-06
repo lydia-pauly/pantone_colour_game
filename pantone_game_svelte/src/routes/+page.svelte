@@ -2,6 +2,7 @@
   //Import components from /lib
   import ColourSquare from "$lib/ColourSquare.svelte";
   import ColourNameGuess from "$lib/ColourNameGuess.svelte";
+  import Score from "$lib/Score.svelte";
 
   //Import methods
   import { onMount } from "svelte";
@@ -11,9 +12,10 @@
 
   //Initialise variables
   let hex_value_array = [];
-  let colour_name_array = [];
+  $: colour_name_array = [];
   let correct_answer = "";
   let hidden = false;
+  $: score = 0;
 
   //Set up initial game state upon mount by selecting colours to guess and their respective names
   onMount(() => {
@@ -35,11 +37,23 @@
   function changeHiddenProperty() {
     hidden = !hidden;
   }
+
+  function checkAnswer(correct_answer, colour_name) {
+    if (correct_answer == colour_name) {
+      alert("Correct!");
+      score++;
+    } else {
+      alert("Incorrect!");
+    }
+    setGame();
+  }
 </script>
 
+<!-- {checkAnswer} allows me to pass the function down as a prop - I can call back with arguments from the child -->
 <div class="colour-square-bar">
   {#each { length: 4 } as _, i}
     <ColourSquare
+      {checkAnswer}
       --square-colour={hex_value_array[i]}
       colour_name={colour_name_array[i]}
       {hidden}
@@ -50,6 +64,10 @@
 
 <div class="colour-guess main-text">
   <ColourNameGuess {correct_answer} />
+</div>
+
+<div class="score">
+  <Score {score} />
 </div>
 
 <button on:click={changeHiddenProperty}>Change hidden</button>
@@ -63,7 +81,8 @@
     margin: auto;
   }
 
-  .colour-guess {
+  .colour-guess,
+  .score {
     display: flex;
     margin: auto;
   }
