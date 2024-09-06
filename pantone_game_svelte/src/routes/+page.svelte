@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   //Import components from /lib
   import ColourSquare from "$lib/ColourSquare.svelte";
   import ColourNameGuess from "$lib/ColourNameGuess.svelte";
@@ -18,6 +18,7 @@
   $: score = 0;
   $: guessing = true;
   $: correct = false;
+  const max_score = 10;
 
   //Set up initial game state upon mount by selecting colours to guess and their respective names
   onMount(() => {
@@ -51,15 +52,18 @@
 
   function checkAnswer(correct_answer, colour_name) {
     guessing = false;
-    if (correct_answer === colour_name) {
-      correct = true;
-      if (!hidden) {
-        score++;
+    if (score < max_score) {
+      if (correct_answer === colour_name) {
+        correct = true;
+        if (!hidden) {
+          score++;
+        }
+      } else {
+        correct = false;
+        //score = Math.floor(score / 2);
       }
-    } else {
-      correct = false;
+      setTimeout(setGame, 1500);
     }
-    setTimeout(setGame, 1500);
   }
 </script>
 
@@ -78,11 +82,24 @@
 </div>
 
 <div class="colour-guess main-text">
-  <ColourNameGuess {correct_answer} {guessing} {correct} {randomiser} />
+  <ColourNameGuess
+    {correct_answer}
+    {guessing}
+    {correct}
+    {score}
+    {max_score}
+    {randomiser}
+    {setGame}
+  />
 </div>
 
 <div class="score">
-  <Score {score} --progress-bar-width={score * 10 + "%"} {hidden} />
+  <Score
+    {score}
+    {max_score}
+    {hidden}
+    --progress-bar-width={(score / max_score) * 100 + "%"}
+  />
 </div>
 
 <div class="button-wrapper">
@@ -92,9 +109,14 @@
     >
     <p class="training-mode-warning">Warning: resets score!</p>
   </div>
-  <button class="reload-game" on:click={() => location.reload()}
-    >Reload game</button
-  >
+  <div class="reload-game">
+    <button class="reload-game-button" on:click={() => location.reload()}
+      >Reload game</button
+    >
+    {#if score === max_score}
+      <p class="reload-game-text">^ You can restart the game here!</p>
+    {/if}
+  </div>
 </div>
 
 <style>
@@ -126,11 +148,13 @@
     margin: auto;
   }
 
-  .training-mode-button {
+  .training-mode-button,
+  .reload-game-button {
     margin-bottom: 0;
     padding-bottom: 0;
   }
-  .training-mode-warning {
+  .training-mode-warnin,
+  .reload-game-text {
     margin-top: 0;
     padding-top: 0;
     font-size: 13px;
