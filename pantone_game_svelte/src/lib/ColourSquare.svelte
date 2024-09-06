@@ -1,16 +1,28 @@
 <script>
-  export let colour_name = "";
+  export let colour_name;
   export let hidden;
-  let placeholder = " ";
+  export let correct_answer;
+
+  function checkAnswer(correct_answer, colour_name) {
+    if (correct_answer == colour_name) {
+      alert("Correct!");
+    } else {
+      alert("Incorrect!");
+    }
+  }
 </script>
 
 <div class="colour-name-pair">
-  <div class="colour-square"></div>
+  <button
+    class="colour-square"
+    on:click={() => checkAnswer(correct_answer, colour_name)}
+  >
+  </button>
   {#if hidden}
     <p class="colour-name main-text">{colour_name.replaceAll("-", " ")}</p>
   {:else}
     <p class="colour-name main-text" style="visibility:hidden">
-      {colour_name.replaceAll("-", " ")}
+      {colour_name}
     </p>
   {/if}
 </div>

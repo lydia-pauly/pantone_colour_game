@@ -12,15 +12,15 @@
   //Initialise variables
   let hex_value_array = [];
   let colour_name_array = [];
-  let chosen_colour = "";
+  let correct_answer = "";
   let hidden = false;
 
   //Set up initial game state upon mount by selecting colours to guess and their respective names
   onMount(() => {
-    setGame(true);
+    setGame();
   });
 
-  function setGame(no_reload) {
+  function setGame() {
     hex_value_array = [];
     colour_name_array = [];
     for (let step = 0; step < 4; step++) {
@@ -28,10 +28,8 @@
       hex_value_array = [...hex_value_array, colourJSON["values"][selector]];
       colour_name_array = [...colour_name_array, colourJSON["names"][selector]];
     }
-    chosen_colour = colour_name_array[Math.floor(Math.random() * 4)];
-    if (!no_reload) {
-      //location.reload();
-    }
+    correct_answer = colour_name_array[Math.floor(Math.random() * 4)];
+    console.log("Correct answer is", correct_answer);
   }
 
   function changeHiddenProperty() {
@@ -45,16 +43,17 @@
       --square-colour={hex_value_array[i]}
       colour_name={colour_name_array[i]}
       {hidden}
+      {correct_answer}
     />
   {/each}
 </div>
 
 <div class="colour-guess main-text">
-  <ColourNameGuess {chosen_colour} />
+  <ColourNameGuess {correct_answer} />
 </div>
 
 <button on:click={changeHiddenProperty}>Change hidden</button>
-<button on:click={setGame()}>Reload game</button>
+<button on:click={() => setGame()}>Reload game</button>
 
 <style>
   .colour-square-bar {

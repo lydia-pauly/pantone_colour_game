@@ -1,8 +1,8 @@
 <script>
-  export let chosen_colour = "";
+  export let correct_answer = "not yet set";
 </script>
 
-<p class="colour main-text">{chosen_colour.replaceAll("-", " ")}</p>
+<p class="colour main-text">{correct_answer.replaceAll("-", " ")}</p>
 
 <style>
   p {
