@@ -48,7 +48,6 @@
       margin-bottom: 2.5px;
       margin-top: 10px;
       font-size: 25px;
-      font-family: "Courier New", Courier, monospace;
     }
   }
 
@@ -58,7 +57,6 @@
       margin-bottom: 10px;
       margin-top: 30px;
       font-size: 30px;
-      font-family: "Courier New", Courier, monospace;
     }
   }
 </style>
