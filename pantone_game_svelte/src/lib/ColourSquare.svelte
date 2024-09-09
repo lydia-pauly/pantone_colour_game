@@ -21,22 +21,50 @@
 </div>
 
 <style>
-  .colour-square {
-    height: 8em;
-    width: 8em;
-    margin: 2em auto;
-    background-color: var(--square-colour);
-    margin-bottom: 0px;
+  /* Base CSS */
+
+  /* Mobile and tablet */
+  @media (min-width: 320px) and (max-width: 999px) {
+    .colour-square {
+      height: 8em;
+      width: 8em;
+      margin: 2em auto;
+      background-color: var(--square-colour);
+      margin-bottom: 0px;
+    }
+
+    .colour-name-pair {
+      display: flex;
+      flex-direction: column;
+      margin: auto;
+    }
+
+    .colour-name {
+      margin-top: 0.5em;
+      margin: auto;
+      font-size: 12.5px;
+    }
   }
 
-  .colour-name-pair {
-    display: flex;
-    flex-direction: column;
-    margin: auto;
-  }
+  /* Desktop */
+  @media (min-width: 1000px) {
+    .colour-square {
+      height: 8em;
+      width: 8em;
+      margin: 2em auto;
+      background-color: var(--square-colour);
+      margin-bottom: 0px;
+    }
 
-  .colour-name {
-    margin-top: 0.5em;
-    margin: auto;
+    .colour-name-pair {
+      display: flex;
+      flex-direction: column;
+      margin: auto;
+    }
+
+    .colour-name {
+      margin-top: 0.5em;
+      margin: auto;
+    }
   }
 </style>

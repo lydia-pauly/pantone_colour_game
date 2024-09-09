@@ -25,28 +25,40 @@
     margin: auto;
   }
 
-  .progress-bar-content {
-    width: var(--progress-bar-width);
-    background-color: black;
-    transition: width 0.25s cubic-bezier(0.42, 0, 0.58, 1);
-  }
-
   .progress-bar,
   .progress-bar-content {
     height: 30px;
     border-radius: 25px;
   }
 
-  .score {
-    margin: auto;
-    margin-bottom: 10px;
-    margin-top: 30px;
-    font-size: 30px;
-    font-family: "Courier New", Courier, monospace;
+  .progress-bar-content {
+    width: var(--progress-bar-width);
+    background-color: black;
+    transition: width 0.25s cubic-bezier(0.42, 0, 0.58, 1);
   }
 
   .freeze-notice {
     margin: auto;
     color: #707070;
+  }
+
+  @media (min-width: 320px) and (max-width: 999px) {
+    .score {
+      margin: auto;
+      margin-bottom: 2.5px;
+      margin-top: 10px;
+      font-size: 25px;
+      font-family: "Courier New", Courier, monospace;
+    }
+  }
+
+  @media (min-width: 1000px) {
+    .score {
+      margin: auto;
+      margin-bottom: 10px;
+      margin-top: 30px;
+      font-size: 30px;
+      font-family: "Courier New", Courier, monospace;
+    }
   }
 </style>
