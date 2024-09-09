@@ -144,6 +144,8 @@
 
     .guess-result-message {
       font-size: 1em;
+      padding-top: 6px;
+      padding-bottom: 6px;
     }
   }
 
