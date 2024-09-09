@@ -64,7 +64,7 @@
         }
       } else {
         correct = false;
-        //score = Math.floor(score / 2);
+        score = Math.floor(score / 2);
       }
       setTimeout(setGame, 1500);
     }
