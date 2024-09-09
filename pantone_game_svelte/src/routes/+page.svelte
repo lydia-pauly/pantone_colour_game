@@ -125,7 +125,6 @@
 
 <style>
   .colour-square-bar {
-    display: flex;
     align-items: center;
     flex-wrap: wrap;
     margin: auto;
@@ -157,7 +156,7 @@
     margin-bottom: 0;
     padding-bottom: 0;
   }
-  .training-mode-warnin,
+  .training-mode-warning,
   .reload-game-text {
     margin-top: 0;
     padding-top: 0;
@@ -166,5 +165,35 @@
 
   .reload-game-text {
     color: orangered;
+  }
+
+  @media (min-width: 1000px) {
+    .colour-square-bar {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      margin: auto;
+    }
+
+    .colour-guess,
+    .score {
+      display: flex;
+      margin: auto;
+    }
+  }
+
+  @media (min-width: 320px) and (max-width: 999px) {
+    .colour-square-bar {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      margin: auto 20px;
+    }
+
+    .colour-guess,
+    .score {
+      display: flex;
+      margin: auto;
+    }
   }
 </style>

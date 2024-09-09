@@ -34,13 +34,13 @@
   const good_emojis = [
     "ദ്ദി ˶ˆᗜˆ˵)",
     "ദ്ദി(ᵔᗜᵔ)",
-    "( ദ്ദി ˙ᗜ˙ )",
+    "(ദി ˙ᗜ˙)",
     "⸜(｡˃ ᵕ < )⸝♡",
-    "ᕙ(  •̀ ᗜ •́  )ᕗ",
+    "ᕙ( •̀ ᗜ •́ )ᕗ",
     "◝(ᵔᗜᵔ)◜",
-    "⸜(｡^ ᵕ ^ )⸝",
+    "⸜(｡^ ᵕ ^)⸝",
     "(˶ˆᗜˆ˵)",
-    "໒( ˵ •̀  ᴗ •́˵)",
+    "໒(˵•̀  ᴗ •́˵)",
     "( >ᴗ< )",
   ];
 
@@ -103,12 +103,12 @@
 
 {#if score < max_score}
   {#if !guessing && correct}
-    <p>
+    <p class="guess-result-message">
       {randomiser(good_emojis)}
       {randomiser(good_messages)}
     </p>
   {:else if !guessing && !correct}
-    <p>
+    <p class="guess-result-message">
       {randomiser(bad_emojis)}
       {randomiser(bad_messages)}
     </p>
@@ -125,20 +125,44 @@
 {/if}
 
 <style>
-  p {
-    margin: 1em auto;
-    font-size: 2em;
+  @media (min-width: 320px) and (max-width: 999px) {
+    .congrats-message-wrapper {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+    }
+
+    p {
+      margin: auto;
+      font-size: 1.5em;
+      margin-top: 7px;
+    }
+
+    .congrats-message-text {
+      font-size: 0.75em;
+    }
+
+    .guess-result-message {
+      font-size: 1em;
+    }
   }
 
-  .congrats-message-wrapper {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    margin-top: 15px;
-  }
+  @media (min-width: 1000px) {
+    p {
+      margin: 1em auto;
+      font-size: 2em;
+    }
 
-  .congrats-message-anim,
-  .congrats-message-text {
-    margin: auto;
+    .congrats-message-wrapper {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      margin-top: 15px;
+    }
+
+    .congrats-message-anim,
+    .congrats-message-text {
+      margin: auto;
+    }
   }
 </style>
