@@ -1,8 +1,10 @@
 <script>
   //Import components from /lib
-  import ColourSquare from "$lib/ColourSquare.svelte";
-  import ColourNameGuess from "$lib/ColourNameGuess.svelte";
-  import Score from "$lib/Score.svelte";
+  import ColourSquare from "$lib/components/ColourSquare.svelte";
+  import ColourNameGuess from "$lib/components/ColourNameGuess.svelte";
+  import Score from "$lib/components/Score.svelte";
+  import HardModeButton from "$lib/components/HardModeButton.svelte";
+  import EasyModeButton from "$lib/components/EasyModeButton.svelte";
 
   //Import methods
   import { onMount } from "svelte";
@@ -18,6 +20,7 @@
   $: score = 0;
   $: guessing = true;
   $: correct = false;
+  $: 
 
   const max_score = 10;
   $: training_mode_toggle = "off";
@@ -71,6 +74,9 @@
   }
 </script>
 
+<EasyModeButton />
+<HardModeButton />
+
 <!-- {checkAnswer} allows me to pass the function down as a prop - I can call back with arguments from the child -->
 <!-- --square-colour={variable} allows me to pass down a prop as a CSS variable which I reference in <style> -->
 <div class="colour-square-bar">
@@ -106,6 +112,7 @@
   />
 </div>
 
+<!-- TODO : Devolve this into two components - training mode button and reload game button -->
 <div class="button-wrapper">
   <div class="training-mode">
     <button class="training-mode-button" on:click={changeHiddenProperty}
@@ -122,6 +129,8 @@
     {/if}
   </div>
 </div>
+
+<!--  -->
 
 <style>
   .colour-square-bar {

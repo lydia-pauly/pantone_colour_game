@@ -18,10 +18,8 @@
         if (frame_cycler > 0) {
           frame_cycler -= 1;
           setGame();
-          console.log(frame_cycler);
         } else {
           frame_cycler += 1;
-          console.log(frame_cycler);
         }
       }
     }, 500);
