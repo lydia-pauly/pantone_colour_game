@@ -1,21 +1,22 @@
 <script>
-  export let colour_name;
+  export let box_colour_name;
   export let hidden;
   export let correct_answer;
   export let checkAnswer;
+  export let mode;
 </script>
 
 <div class="colour-name-pair">
   <button
     class="colour-square"
-    on:click={() => checkAnswer(correct_answer, colour_name)}
+    on:click={() => checkAnswer(correct_answer, box_colour_name, mode)}
   >
   </button>
   {#if hidden}
-    <p class="colour-name main-text">{colour_name.replaceAll("-", " ")}</p>
+    <p class="colour-name main-text">{box_colour_name.replaceAll("-", " ")}</p>
   {:else}
     <p class="colour-name main-text" style="visibility:hidden">
-      {colour_name}
+      {box_colour_name}
     </p>
   {/if}
 </div>
@@ -31,6 +32,7 @@
       margin: 2em auto;
       background-color: var(--square-colour);
       margin-bottom: 0px;
+      border-radius: 10px;
     }
 
     .colour-name-pair {
@@ -54,6 +56,7 @@
       margin: 2em auto;
       background-color: var(--square-colour);
       margin-bottom: 0px;
+      border-radius: 10px;
     }
 
     .colour-name-pair {
