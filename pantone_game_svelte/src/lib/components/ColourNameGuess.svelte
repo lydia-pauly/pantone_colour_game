@@ -1,7 +1,7 @@
 <script>
   import { onMount } from "svelte";
 
-  export let correct_answer = "not yet set";
+  export let correct_answer = "loading";
   export let guessing;
   export let correct;
   export let randomiser;

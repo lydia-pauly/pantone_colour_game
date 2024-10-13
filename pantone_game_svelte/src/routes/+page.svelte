@@ -23,6 +23,7 @@
   $: correct = false;
   $: square_sizes = [8, 8, 8, 8];
   $: mode = 1;
+  $: clicked = false;
 
   const max_score = 10;
   $: training_mode_toggle = "off";
@@ -36,14 +37,37 @@
     //Reset the arrays - don't remove these just for refactoring, you plantpot -- and don't put them in the loop!!!
     hex_value_array = [];
     colour_name_array = [];
-    for (let step = 0; step < 4; step++) {
-      let selector = Math.floor(Math.random() * colourJSON["names"].length);
-      hex_value_array = [...hex_value_array, colourJSON["values"][selector]];
-      colour_name_array = [...colour_name_array, colourJSON["names"][selector]];
+
+    if (mode < 2) {
+      for (let step = 0; step < 4; step++) {
+        let selector = Math.floor(Math.random() * colourJSON["names"].length);
+        hex_value_array = [...hex_value_array, colourJSON["values"][selector]];
+        colour_name_array = [
+          ...colour_name_array,
+          colourJSON["names"][selector],
+        ];
+      }
+    } else {
+      let selector = Math.floor(
+        Math.random() * (colourJSON["names"].length - 1)
+      );
+      if (selector < 2) {
+        selector += 2;
+      }
+      for (let step = -2; step < 2; step++) {
+        hex_value_array = [
+          ...hex_value_array,
+          colourJSON["values"][selector + step],
+        ];
+        colour_name_array = [
+          ...colour_name_array,
+          colourJSON["names"][selector + step],
+        ];
+      }
     }
-    console.log(colour_name_array);
     correct_answer = colour_name_array[Math.floor(Math.random() * 4)];
     guessing = true;
+    clicked = false;
   }
 
   function randomiser(array) {
@@ -67,23 +91,30 @@
 
   function adjustScoreDown(score, mode) {
     if (mode < 1) {
-      return --score;
+      if (score > 0) {
+        return --score;
+      } else {
+        return 0;
+      }
     } else {
       return (score = Math.floor(score / 2));
     }
   }
 
   function checkAnswer(correct_answer, box_colour_name, mode) {
-    guessing = false;
-    correct = box_colour_name === correct_answer;
-    if (!(score === max_score) && !hidden) {
-      if (correct) {
-        score = adjustScoreUp(score);
-      } else {
-        score = adjustScoreDown(score, mode);
+    if (!clicked) {
+      clicked = true;
+      guessing = false;
+      correct = box_colour_name === correct_answer;
+      if (!(score === max_score) && !hidden) {
+        if (correct) {
+          score = adjustScoreUp(score);
+        } else {
+          score = adjustScoreDown(score, mode);
+        }
       }
+      setTimeout(setGame, 1500);
     }
-    setTimeout(setGame, 1500);
   }
 
   function setMode(modeValue) {
@@ -111,11 +142,13 @@
     <ColourSquare
       {checkAnswer}
       --square-colour={hex_value_array[i]}
+      square_hex_code={hex_value_array[i]}
       --square-size={square_sizes[i] + "em"}
       box_colour_name={colour_name_array[i]}
       {hidden}
       {correct_answer}
       {mode}
+      --disable_clicks={guessing}
     />
   {/each}
 </div>

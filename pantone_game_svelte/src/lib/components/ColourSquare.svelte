@@ -4,6 +4,7 @@
   export let correct_answer;
   export let checkAnswer;
   export let mode;
+  export let square_hex_code = "#00000";
 </script>
 
 <div class="colour-name-pair">
@@ -12,6 +13,7 @@
     on:click={() => checkAnswer(correct_answer, box_colour_name, mode)}
   >
   </button>
+  <p class="colour-squaure-hex-code">{square_hex_code}</p>
   {#if hidden}
     <p class="colour-name main-text">{box_colour_name.replaceAll("-", " ")}</p>
   {:else}
@@ -63,6 +65,7 @@
       display: flex;
       flex-direction: column;
       margin: auto;
+      pointer-events: var(--disable_clicks);
     }
 
     .colour-name {
