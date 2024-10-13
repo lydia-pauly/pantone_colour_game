@@ -1,7 +1,7 @@
 <script>
   import { onMount } from "svelte";
 
-  export let correct_answer = "not yet set";
+  export let correct_answer = "loading";
   export let guessing;
   export let correct;
   export let randomiser;
@@ -18,10 +18,8 @@
         if (frame_cycler > 0) {
           frame_cycler -= 1;
           setGame();
-          console.log(frame_cycler);
         } else {
           frame_cycler += 1;
-          console.log(frame_cycler);
         }
       }
     }, 500);

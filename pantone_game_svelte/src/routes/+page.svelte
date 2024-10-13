@@ -1,8 +1,11 @@
 <script>
   //Import components from /lib
-  import ColourSquare from "$lib/ColourSquare.svelte";
-  import ColourNameGuess from "$lib/ColourNameGuess.svelte";
-  import Score from "$lib/Score.svelte";
+  import ColourSquare from "$lib/components/ColourSquare.svelte";
+  import ColourNameGuess from "$lib/components/ColourNameGuess.svelte";
+  import Score from "$lib/components/Score.svelte";
+  import GameModeButton from "$lib/components/Buttons/GameModeButton.svelte";
+  import ReloadGamebutton from "$lib/components/Buttons/ReloadGamebutton.svelte";
+  import TrainingModeButton from "$lib/components/Buttons/TrainingModeButton.svelte";
 
   //Import methods
   import { onMount } from "svelte";
@@ -12,12 +15,15 @@
 
   //Initialise variables
   let hex_value_array = [];
-  $: colour_name_array = [];
-  let correct_answer = "";
+  let colour_name_array = [];
+  $: correct_answer = "";
   $: hidden = false;
   $: score = 0;
   $: guessing = true;
   $: correct = false;
+  $: square_sizes = [8, 8, 8, 8];
+  $: mode = 1;
+  $: clicked = false;
 
   const max_score = 10;
   $: training_mode_toggle = "off";
@@ -28,15 +34,40 @@
   });
 
   function setGame() {
+    //Reset the arrays - don't remove these just for refactoring, you plantpot -- and don't put them in the loop!!!
     hex_value_array = [];
     colour_name_array = [];
-    for (let step = 0; step < 4; step++) {
-      let selector = Math.floor(Math.random() * colourJSON["names"].length);
-      hex_value_array = [...hex_value_array, colourJSON["values"][selector]];
-      colour_name_array = [...colour_name_array, colourJSON["names"][selector]];
+
+    if (mode < 2) {
+      for (let step = 0; step < 4; step++) {
+        let selector = Math.floor(Math.random() * colourJSON["names"].length);
+        hex_value_array = [...hex_value_array, colourJSON["values"][selector]];
+        colour_name_array = [
+          ...colour_name_array,
+          colourJSON["names"][selector],
+        ];
+      }
+    } else {
+      let selector = Math.floor(
+        Math.random() * (colourJSON["names"].length - 1)
+      );
+      if (selector < 2) {
+        selector += 2;
+      }
+      for (let step = -2; step < 2; step++) {
+        hex_value_array = [
+          ...hex_value_array,
+          colourJSON["values"][selector + step],
+        ];
+        colour_name_array = [
+          ...colour_name_array,
+          colourJSON["names"][selector + step],
+        ];
+      }
     }
     correct_answer = colour_name_array[Math.floor(Math.random() * 4)];
     guessing = true;
+    clicked = false;
   }
 
   function randomiser(array) {
@@ -54,22 +85,55 @@
     hidden = !hidden;
   }
 
-  function checkAnswer(correct_answer, colour_name) {
-    guessing = false;
-    if (score < max_score) {
-      if (correct_answer === colour_name) {
-        correct = true;
-        if (!hidden) {
-          score++;
-        }
+  function adjustScoreUp(score) {
+    return ++score;
+  }
+
+  function adjustScoreDown(score, mode) {
+    if (mode < 1) {
+      if (score > 0) {
+        return --score;
       } else {
-        correct = false;
-        score = Math.floor(score / 2);
+        return 0;
+      }
+    } else {
+      return (score = Math.floor(score / 2));
+    }
+  }
+
+  function checkAnswer(correct_answer, box_colour_name, mode) {
+    if (!clicked) {
+      clicked = true;
+      guessing = false;
+      correct = box_colour_name === correct_answer;
+      if (!(score === max_score) && !hidden) {
+        if (correct) {
+          score = adjustScoreUp(score);
+        } else {
+          score = adjustScoreDown(score, mode);
+        }
       }
       setTimeout(setGame, 1500);
     }
   }
+
+  function setMode(modeValue) {
+    mode = modeValue;
+    console.log("triggered");
+    score = 0;
+    setGame();
+  }
 </script>
+
+<!-- TO DO: -->
+<!-- 1. Refactor CSS classes into IDs where necessary - overclassing -->
+<!-- 2. Accessibility review (aliases etc)-->
+
+<div class="game-mode-button-wrapper">
+  <GameModeButton buttonLabel={"Easy mode"} {mode} {setMode} />
+  <GameModeButton buttonLabel={"Normal mode"} {mode} {setMode} />
+  <GameModeButton buttonLabel={"Hard mode"} {mode} {setMode} />
+</div>
 
 <!-- {checkAnswer} allows me to pass the function down as a prop - I can call back with arguments from the child -->
 <!-- --square-colour={variable} allows me to pass down a prop as a CSS variable which I reference in <style> -->
@@ -78,9 +142,13 @@
     <ColourSquare
       {checkAnswer}
       --square-colour={hex_value_array[i]}
-      colour_name={colour_name_array[i]}
+      square_hex_code={hex_value_array[i]}
+      --square-size={square_sizes[i] + "em"}
+      box_colour_name={colour_name_array[i]}
       {hidden}
       {correct_answer}
+      {mode}
+      --disable_clicks={guessing}
     />
   {/each}
 </div>
@@ -107,20 +175,16 @@
 </div>
 
 <div class="button-wrapper">
-  <div class="training-mode">
-    <button class="training-mode-button" on:click={changeHiddenProperty}
-      >Training mode: {training_mode_toggle}</button
-    >
-    <p class="training-mode-warning">Warning: resets score!</p>
-  </div>
-  <div class="reload-game">
-    <button class="reload-game-button" on:click={() => location.reload()}
-      >Reload game</button
-    >
-    {#if score === max_score}
-      <p class="reload-game-text">^ You can restart the game here!</p>
-    {/if}
-  </div>
+  <TrainingModeButton
+    buttonLabel={"Training mode"}
+    {changeHiddenProperty}
+    {training_mode_toggle}
+  />
+  <ReloadGamebutton
+    buttonLabel={"Reload game"}
+    additionalText={"^ You can restart the game here!"}
+    endGameMarker={score === max_score}
+  />
 </div>
 
 <style>
@@ -146,25 +210,10 @@
     margin-top: 15px;
   }
 
-  .training-mode,
-  .reload-game {
-    margin: auto;
-  }
-
-  .training-mode-button,
-  .reload-game-button {
-    margin-bottom: 0;
-    padding-bottom: 0;
-  }
-  .training-mode-warning,
-  .reload-game-text {
-    margin-top: 0;
-    padding-top: 0;
-    font-size: 13px;
-  }
-
-  .reload-game-text {
-    color: orangered;
+  .game-mode-button-wrapper {
+    width: 100%;
+    display: flex;
+    align-items: center;
   }
 
   @media (min-width: 1000px) {
