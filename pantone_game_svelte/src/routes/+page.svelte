@@ -211,9 +211,10 @@
   }
 
   .game-mode-button-wrapper {
-    width: 100%;
     display: flex;
-    align-items: center;
+    justify-content: space-around;
+    margin: auto;
+    padding: 1.2em;
   }
 
   @media (min-width: 1000px) {
@@ -229,6 +230,11 @@
       display: flex;
       margin: auto;
     }
+
+    .game-mode-button-wrapper {
+    display: flex;
+    align-items: center;
+  }
   }
 
   @media (min-width: 320px) and (max-width: 999px) {
@@ -243,6 +249,11 @@
     .score {
       display: flex;
       margin: auto;
+    }
+
+      .game-mode-button-wrapper {
+      margin: auto;
+      display: flex;
     }
   }
 </style>

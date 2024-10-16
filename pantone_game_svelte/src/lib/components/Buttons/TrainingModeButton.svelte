@@ -7,7 +7,7 @@
 <div class="training-button-warning-wrapper">
   <button class="training-mode-button" on:click={changeHiddenProperty}>
     <p class="training-mode-button-text">
-      {buttonLabel}: {training_mode_toggle}
+      {buttonLabel}: <strong>{training_mode_toggle}</strong>
     </p>
   </button>
   <p class="training-mode-button-add-text">^ Warning: resets score!</p>
@@ -23,6 +23,8 @@
     border: solid;
     border-width: 1px;
     border-radius: 5px;
+    width: 100%;
+    
   }
 
   .training-mode-button-text {
