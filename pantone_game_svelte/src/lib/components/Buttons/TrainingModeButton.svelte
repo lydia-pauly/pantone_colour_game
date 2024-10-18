@@ -40,4 +40,16 @@
     font-size: 13px;
     color: orangered;
   }
+
+  @media (min-width: 320px) and (max-width: 999px) {
+    .training-mode-button-text {
+      font-size: 5px;
+    }
+  }
+
+  @media (min-width: 1000px) {
+    .training-mode-button-text {
+      font-size: 13px;
+    }
+  }
 </style>

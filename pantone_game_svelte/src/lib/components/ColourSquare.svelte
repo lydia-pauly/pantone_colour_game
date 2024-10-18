@@ -15,9 +15,9 @@
   </button>
   <p class="colour-squaure-hex-code">{square_hex_code}</p>
   {#if hidden}
-    <p class="colour-name main-text">{box_colour_name.replaceAll("-", " ")}</p>
+    <p class="colour-name-main-text">{box_colour_name.replaceAll("-", " ")}</p>
   {:else}
-    <p class="colour-name main-text" style="visibility:hidden">
+    <p class="colour-name-main-text" style="visibility:hidden">
       {box_colour_name}
     </p>
   {/if}
@@ -43,7 +43,7 @@
       margin: 0 auto auto auto;
     }
 
-    .colour-name {
+    .colour-name-main-text {
       margin-top: 0.5em;
       margin: auto;
       font-size: 12.5px;
@@ -68,7 +68,7 @@
       pointer-events: var(--disable_clicks);
     }
 
-    .colour-name {
+    .colour-name-main-text {
       margin-top: 0.5em;
       margin: auto;
     }

@@ -14,6 +14,7 @@
 </div>
 
 <style>
+
   .reload-game-button-wrapper {
     margin: auto;
     margin-top: 0;

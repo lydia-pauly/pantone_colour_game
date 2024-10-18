@@ -152,7 +152,7 @@
   {/each}
 </div>
 
-<div class="colour-guess main-text">
+<div class="colour-guess-main-text">
   <ColourNameGuess
     {correct_answer}
     {guessing}
@@ -193,7 +193,7 @@
     margin: auto;
   }
 
-  .colour-guess,
+  .colour-guess-main-text,
   .score {
     display: flex;
     margin: auto;
@@ -224,7 +224,7 @@
       margin: auto;
     }
 
-    .colour-guess,
+    .colour-guess-main-text,
     .score {
       display: flex;
       margin: auto;
@@ -244,7 +244,7 @@
       margin: auto 20px;
     }
 
-    .colour-guess,
+    .colour-guess-main-text,
     .score {
       display: flex;
       margin: auto;

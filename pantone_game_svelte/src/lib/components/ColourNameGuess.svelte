@@ -111,7 +111,7 @@
       {randomiser(bad_messages)}
     </p>
   {:else}
-    <p class="colour main-text">{correct_answer.replaceAll("-", " ")}</p>
+    <p class="colour-main-text">{correct_answer.replaceAll("-", " ")}</p>
   {/if}
 {:else}
   <div class="congrats-message-wrapper">
@@ -143,6 +143,11 @@
       font-size: 1em;
       padding-top: 6px;
       padding-bottom: 6px;
+    }
+
+    .colour-main-text {
+      font-size: 20px;
+      margin-top: 0px;
     }
   }
 

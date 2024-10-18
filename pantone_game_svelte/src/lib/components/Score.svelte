@@ -46,7 +46,7 @@
       margin: auto;
       margin-bottom: 0;
       margin-top: 0;
-      font-size: 25px;
+      font-size: 15px;
     }
 
     .progress-bar {
@@ -64,6 +64,10 @@
 
     .progress-bar {
       margin: auto;
+    }
+
+    .score {
+      font-size: 5px;
     }
   }
 </style>
