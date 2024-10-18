@@ -22,7 +22,6 @@
   .progress-bar {
     width: 90%;
     background-color: #e1e1e1;
-    margin: auto;
   }
 
   .progress-bar,
@@ -45,9 +44,13 @@
   @media (min-width: 320px) and (max-width: 999px) {
     .score {
       margin: auto;
-      margin-bottom: 2.5px;
-      margin-top: 10px;
+      margin-bottom: 0;
+      margin-top: 0;
       font-size: 25px;
+    }
+
+    .progress-bar {
+      margin: 0 auto;
     }
   }
 
@@ -57,6 +60,10 @@
       margin-bottom: 10px;
       margin-top: 30px;
       font-size: 30px;
+    }
+
+    .progress-bar {
+      margin: auto;
     }
   }
 </style>

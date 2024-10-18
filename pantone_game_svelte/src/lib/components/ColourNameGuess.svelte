@@ -133,7 +133,6 @@
     p {
       margin: auto;
       font-size: 1.5em;
-      margin-top: 7px;
     }
 
     .congrats-message-text {

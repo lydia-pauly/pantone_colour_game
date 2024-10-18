@@ -40,7 +40,7 @@
     .colour-name-pair {
       display: flex;
       flex-direction: column;
-      margin: auto;
+      margin: 0 auto auto auto;
     }
 
     .colour-name {
