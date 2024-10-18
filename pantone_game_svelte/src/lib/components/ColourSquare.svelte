@@ -31,7 +31,7 @@
     .colour-square {
       height: 8em;
       width: 8em;
-      margin: 2em auto;
+      margin: 1em auto;
       background-color: var(--square-colour);
       margin-bottom: 0px;
       border-radius: 10px;
