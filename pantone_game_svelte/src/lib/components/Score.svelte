@@ -65,9 +65,5 @@
     .progress-bar {
       margin: auto;
     }
-
-    .score {
-      font-size: 5px;
-    }
   }
 </style>
