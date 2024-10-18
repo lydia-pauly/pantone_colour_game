@@ -122,18 +122,6 @@
   </div>
 {/if}
 
-<div class="emoji-check">
-  {#each { length: bad_emojis.length } as _, i}
-  <p> {bad_emojis[i]} </p>
-  {/each}
-</div>
-
-<div class="emoji-check">
-  {#each { length: good_emojis.length } as _, i}
-  <p> {good_emojis[i]} </p>
-  {/each}
-</div>
-
 <style>
   @media (min-width: 320px) and (max-width: 999px) {
     .congrats-message-wrapper {
