@@ -30,16 +30,16 @@
   });
 
   const good_emojis = [
-    "ദ്ദി ˶ˆᗜˆ˵)",
-    "ദ്ദി(ᵔᗜᵔ)",
+    "ദ്ദി ˆᗜˆ)",
+    "ദ്ദി(^ᗜ^)",
     "(ദി ˙ᗜ˙)",
-    "⸜(｡˃ ᵕ < )⸝♡",
+    "⸜(｡> u < )⸝♡",
     "ᕙ( •̀ ᗜ •́ )ᕗ",
-    "◝(ᵔᗜᵔ)◜",
-    "⸜(｡^ ᵕ ^)⸝",
-    "(˶ˆᗜˆ˵)",
-    "໒(˵•̀  ᴗ •́˵)",
-    "( >ᴗ< )",
+    "\(^ᗜ^)/",
+    "⸜(｡^ u ^)⸝",
+    "(=ˆᗜˆ=)",
+    "໒(=•̀  u •́)",
+    "( >u< )",
   ];
 
   const good_messages = [
@@ -59,16 +59,16 @@
   ];
 
   const bad_emojis = [
-    "(·•᷄ࡇ•᷅ )",
+    "(·•ࡇ• )",
     "(｡•́︿•̀｡)",
     "┐(´～｀ˇ)┌",
     "( ˙◠˙ )",
-    "(っ- ‸ - ς)",
+    "(っ- _ - ς)",
     "(⊙ _ ⊙ )",
     "ᕙ( ᗒᗣᗕ )ᕗ",
     "｡°(°.◜ᯅ◝°)°｡",
     "(´•︵•`)",
-    "૮₍•᷄ ࡇ •᷅₎ა",
+    "૮(• ࡇ •)ა",
     "(ó﹏ò｡)",
     "(つ╥﹏╥)つ",
   ];
@@ -111,7 +111,7 @@
       {randomiser(bad_messages)}
     </p>
   {:else}
-    <p class="colour main-text">{correct_answer.replaceAll("-", " ")}</p>
+    <p class="colour-main-text">{correct_answer.replaceAll("-", " ")}</p>
   {/if}
 {:else}
   <div class="congrats-message-wrapper">
@@ -133,7 +133,6 @@
     p {
       margin: auto;
       font-size: 1.5em;
-      margin-top: 7px;
     }
 
     .congrats-message-text {
@@ -144,6 +143,15 @@
       font-size: 1em;
       padding-top: 6px;
       padding-bottom: 6px;
+    }
+
+    .colour-main-text {
+      font-size: 20px;
+      margin-top: 0px;
+    }
+
+    .emoji-check {
+      margin-right: 20px;
     }
   }
 

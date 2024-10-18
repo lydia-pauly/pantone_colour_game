@@ -14,6 +14,7 @@
 </div>
 
 <style>
+
   .reload-game-button-wrapper {
     margin: auto;
     margin-top: 0;
@@ -38,5 +39,11 @@
     padding-top: 0;
     font-size: 13px;
     color: orangered;
+  }
+
+  @media (min-width: 320px) and (max-width: 999px) {
+    .reload-game-button-text{
+      font-size: 13px;
+    }
   }
 </style>
