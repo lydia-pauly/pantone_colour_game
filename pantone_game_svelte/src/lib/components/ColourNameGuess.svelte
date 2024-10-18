@@ -59,16 +59,16 @@
   ];
 
   const bad_emojis = [
-    "(·•᷄ࡇ•᷅ )",
+    "(·•ࡇ• )",
     "(｡•́︿•̀｡)",
     "┐(´～｀ˇ)┌",
     "( ˙◠˙ )",
-    "(っ- ‸ - ς)",
+    "(っ- _ - ς)",
     "(⊙ _ ⊙ )",
     "ᕙ( ᗒᗣᗕ )ᕗ",
     "｡°(°.◜ᯅ◝°)°｡",
     "(´•︵•`)",
-    "૮₍•᷄ ࡇ •᷅₎ა",
+    "૮(• ࡇ •)ა",
     "(ó﹏ò｡)",
     "(つ╥﹏╥)つ",
   ];
@@ -123,10 +123,17 @@
 {/if}
 
 <div class="emoji-check">
-  {#each { length: good_emojis.length } as _, i}
+  {#each { length: bad_emojis.length } as _, i}
   <p> {bad_emojis[i]} </p>
   {/each}
 </div>
+
+<div class="emoji-check">
+  {#each { length: good_emojis.length } as _, i}
+  <p> {good_emojis[i]} </p>
+  {/each}
+</div>
+
 <style>
   @media (min-width: 320px) and (max-width: 999px) {
     .congrats-message-wrapper {
