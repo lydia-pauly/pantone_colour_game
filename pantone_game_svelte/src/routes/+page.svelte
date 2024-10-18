@@ -119,7 +119,6 @@
 
   function setMode(modeValue) {
     mode = modeValue;
-    console.log("triggered");
     score = 0;
     setGame();
   }
@@ -232,9 +231,9 @@
     }
 
     .game-mode-button-wrapper {
-    display: flex;
-    align-items: center;
-  }
+      padding: 1.2em;
+    }
+
   }
 
   @media (min-width: 320px) and (max-width: 999px) {
@@ -251,9 +250,8 @@
       margin: auto;
     }
 
-      .game-mode-button-wrapper {
-      margin: auto;
-      display: flex;
+    .game-mode-button-wrapper {
+      padding: 0;
     }
   }
 </style>
